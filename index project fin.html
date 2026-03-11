@@ -1,0 +1,3397 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LEARNIVERSE</title>
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  body{
+margin:0;
+font-family: 'Poppins', Arial, sans-serif;
+text-align: center;
+background: linear-gradient(-45deg,#4c1e96,#7597de,#f433cd,#4444fe,#04d0d0);
+background-size:400% 400%;
+animation: galaxyMove 16s ease infinite;
+}
+
+@keyframes galaxyMove{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+header{
+  background:#333;
+  color:white;
+  padding:20px;
+}
+.section{
+  display:none;
+  padding:20px;
+}
+.box{
+  background:white;
+  width:220px;
+  margin:15px auto;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 8px gray;
+  cursor:pointer;
+}
+input{
+  padding:10px;
+  margin:10px;
+  width:220px;
+}
+button{
+  padding:10px 20px;
+  background:#333;
+  color:white;
+  border:none;
+  border-radius:5px;
+  cursor:pointer;
+}
+.icon-btn{
+  padding:6px 8px;
+  font-size:16px;
+  border-radius:6px;
+  vertical-align:middle;
+}
+#login{ position:relative; }
+.login-icons{
+  position:absolute;
+  right:12px;
+  top:12px;
+  display:flex;
+  gap:8px;
+}
+pre{
+  background:#272822;
+  color:white;
+  padding:15px;
+  border-radius:8px;
+  width:60%;
+  margin:auto;
+  text-align:left;
+}
+.quiz-box{
+  background:white;
+  width:60%;
+  margin:15px auto;
+  padding:20px;
+  border-radius:10px;
+  text-align:left;
+}
+.puzzle-card{background:#fff;border-radius:8px;height:90px;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,0.08);transform-style:preserve-3d;transition:transform 0.45s;}
+.puzzle-card .puzzle-inner{position:relative;width:100%;height:100%;}
+.puzzle-card .puzzle-front,.puzzle-card .puzzle-back{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:24px}
+.puzzle-card .puzzle-front{background:#111;color:#fff;transform:rotateY(0deg);}
+.puzzle-card .puzzle-back{background:#fff;transform:rotateY(180deg);}
+.puzzle-card.flipped{transform:rotateY(180deg)}
+.puzzle-card.matched{box-shadow:0 8px 20px rgba(16,185,129,0.18);border:2px solid #10b981}
+.quiz-box label{
+  display:block;
+  margin-top:5px;
+}
+.correct{color:green;font-weight:bold;}
+.wrong{color:red;font-weight:bold;}
+.cert-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:2000}
+.cert-modal{background:#fff;border-radius:12px;padding:12px;box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.cert-controls{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.cert-btn{padding:8px 14px;border-radius:8px;background:#2575fc;color:#fff;border:none;cursor:pointer}
+.cert-close{background:#ef4444}
+.site-title{ font-family: 'Poppins', sans-serif; font-weight:700; font-size:40px; margin:6px 0 6px; letter-spacing:1px; color:white; }
+.site-tagline{ font-family: 'Poppins', sans-serif; font-weight:300; font-size:18px; margin:6px 0 18px; color:white; }
+/* Voice control floating button (small size) */
+#voiceControl{position:fixed;right:12px;bottom:12px;z-index:3000;display:flex;gap:6px;align-items:center;background:rgba(255,255,255,0.95);padding:4px;border-radius:8px;box-shadow:0 6px 14px rgba(0,0,0,0.18)}
+#voiceControl button{background:transparent;border:none;padding:6px;width:34px;height:34px;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:6px}
+#voiceControl button:hover{background:#f3f4f6}
+/* --- Hand wave and sparkle animation styles --- */
+.hand-wave{display:inline-block;margin-left:8px;font-size:30px;transform-origin:center bottom;animation:handIdle 4s linear infinite}
+.hand-wave.waving{animation:handWave 1s ease-in-out 0s 4}
+@keyframes handIdle{0%{transform:translateY(0)}50%{transform:translateY(-1px)}100%{transform:translateY(0)}}
+@keyframes handWave{0%{transform:rotate(0deg)}15%{transform:rotate(20deg)}30%{transform:rotate(-10deg)}45%{transform:rotate(18deg)}60%{transform:rotate(-8deg)}75%{transform:rotate(12deg)}100%{transform:rotate(0deg)}}
+
+/* Sparkles (particle) overlay */
+.sparkle-overlay{pointer-events:none;position:fixed;inset:0;z-index:4000;overflow:hidden}
+.sparkle{position:absolute;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff 0%, #fff0 60%),linear-gradient(45deg,#ffef9f,#ffd166);filter:drop-shadow(0 6px 10px rgba(0,0,0,0.12));transform-origin:center;opacity:0}
+@keyframes sparkleRise{0%{opacity:0;transform:translateY(0) scale(0.4) rotate(0)}10%{opacity:1}100%{opacity:0;transform:translateY(-140px) scale(1.2) rotate(360deg)}}
+.sparkle.small{width:8px;height:8px}
+.sparkle.medium{width:12px;height:12px}
+.sparkle.large{width:18px;height:18px}
+
+/* Emoji overlays for puzzle result */
+.emoji-overlay{position:fixed;left:50%;top:30%;transform:translate(-50%,-50%);z-index:4500;pointer-events:none;font-size:96px;opacity:0;animation:emojiPop 800ms cubic-bezier(.2,.9,.3,1) forwards}
+.emoji-overlay.sad{font-size:88px;filter:grayscale(0.2);}
+@keyframes emojiPop{0%{opacity:0;transform:translate(-50%,-40%) scale(0.2)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes emojiShake{0%{transform:translate(-50%,-50%) rotate(0)}20%{transform:translate(-50%,-50%) rotate(-10deg)}40%{transform:translate(-50%,-50%) rotate(8deg)}60%{transform:translate(-50%,-50%) rotate(-6deg)}80%{transform:translate(-50%,-50%) rotate(4deg)}100%{transform:translate(-50%,-50%) rotate(0)}}
+
+/* Drag & drop quiz styles */
+.drag-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.drag-item{background:#fff;border:1px solid #ddd;padding:8px 10px;border-radius:8px;cursor:grab;box-shadow:0 6px 14px rgba(0,0,0,0.06);}
+.drop-target{min-width:160px;min-height:36px;border:2px dashed #cbd5e1;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;padding:6px 8px;background:#fbfbff}
+.drop-target.filled{border-style:solid}
+.drag-quiz .question{display:flex;gap:12px;align-items:center;justify-content:center;margin:8px 0}
+.drag-quiz .question p{margin:0}
+.drag-quiz .controls{display:flex;gap:8px;justify-content:center;margin-top:12px}
+.drag-quiz .correct{border-color:#10b981;background:#ecfdf5}
+.drag-quiz .wrong{border-color:#ef4444;background:#fff1f2}
+
+/* Assistant speaking animation */
+#assistantPanel.speaking img{animation:speak-bob 220ms infinite;transform-origin:center bottom}
+@keyframes speak-bob{0%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(0.96)}100%{transform:translateY(0) scaleY(1)}}
+
+/* Floating cartoon assistant bubble */
+.cartoon-assist{position:fixed;right:18px;bottom:84px;width:120px;height:120px;border-radius:12px;background:rgba(255,255,255,0.96);display:flex;align-items:center;justify-content:center;z-index:3600;box-shadow:0 10px 30px rgba(2,6,23,0.18);padding:8px}
+.cartoon-assist img{width:84px;height:84px;border-radius:8px}
+.cartoon-assist.speaking img{animation:speak-bob 220ms infinite}
+
+/* Animated woman SVG styles */
+.assistant-svg{width:92px;height:92px;display:block}
+/* animate only when assistant has speaking class */
+.cartoon-assist.speaking .assistant-face{transform-origin:center center;animation:breath 2200ms ease-in-out infinite}
+.cartoon-assist.speaking .assistant-mouth{transform-origin:center top;animation:mouthTalk 420ms linear infinite}
+.cartoon-assist.speaking .assistant-hand{transform-origin:top center;animation:handIdle 1800ms ease-in-out infinite}
+@keyframes breath{0%{transform:scale(1)}50%{transform:scale(1.02)}100%{transform:scale(1)}}
+@keyframes mouthTalk{0%{transform:scaleY(1)}50%{transform:scaleY(0.6)}100%{transform:scaleY(1)}}
+
+/* Ensure assistant stays visible above other elements (Edge fix) */
+.cartoon-assist{position:fixed !important; z-index:99999 !important}
+
+
+</style>
+<script>
+// Show selected page
+function showPage(id){
+  var pages=document.getElementsByClassName("section");
+  for(var i=0;i<pages.length;i++){
+    pages[i].style.display="none";
+  }
+  document.getElementById(id).style.display="block";
+  // track current visible section for global actions (voice assistant)
+  try{ window.currentSectionId = id; }catch(e){}
+  // show/hide global icon nav: hide on initial pages (landing, welcome, register, login, entry)
+  var nav = document.getElementById('globalNav');
+  if(nav){
+    if(id==='landing' || id==='welcome' || id==='entry' || id==='register' || id==='login') nav.style.display='none';
+    else nav.style.display='flex';
+  }
+  // show/hide voice control on initial auth/entry pages
+  var voiceCtrl = document.getElementById('voiceControl');
+  if(voiceCtrl){
+    if(id==='landing' || id==='welcome' || id==='register' || id==='login') voiceCtrl.style.display='none';
+    else voiceCtrl.style.display='flex';
+  }
+}
+
+// Registration
+function register(){
+  var u=document.getElementById("reguser").value;
+  var p=document.getElementById("regpass").value;
+  if(u=="" || p==""){ alert("Enter username and password"); return; }
+  localStorage.setItem("username",u);
+  localStorage.setItem("password",p);
+  alert("Registration Successful");
+  showPage("login");
+}
+
+// Login
+function login(){
+  var u=document.getElementById("loguser").value;
+  var p=document.getElementById("logpass").value;
+  var su=localStorage.getItem("username");
+  var sp=localStorage.getItem("password");
+  if(u==su && p==sp){
+    alert("Login Successful");
+    // record login with timestamp
+    try{
+      var history = JSON.parse(localStorage.getItem('loginHistory') || '[]');
+      history.unshift({ user: u, time: new Date().toISOString() });
+      // keep recent 100 entries max
+      if(history.length>100) history = history.slice(0,100);
+      localStorage.setItem('loginHistory', JSON.stringify(history));
+    }catch(e){ console.error('Could not save login history', e); }
+
+    showPage("courses");
+  } else{
+    alert("Wrong Username or Password");
+  }
+}
+
+// Forgot password: simple prompt flow to reset stored password for the registered user
+function forgotPassword(){
+  var storedUser = localStorage.getItem('username');
+  if(!storedUser){
+    alert('No account registered yet. Please register first.');
+    showPage('register');
+    return;
+  }
+  var user = prompt('Enter your username to reset password:');
+  if(!user) return;
+  if(user !== storedUser){
+    alert('Username not found.');
+    return;
+  }
+  var newPass = prompt('Enter new password:');
+  if(!newPass){ alert('Password reset cancelled'); return; }
+  var confirmPass = prompt('Confirm new password:');
+  if(newPass !== confirmPass){ alert('Passwords do not match. Try again.'); return; }
+  localStorage.setItem('password', newPass);
+  alert('Password reset successful. Please login with your new password.');
+  showPage('login');
+}
+
+// Logout icon: clear current login inputs so user can enter different credentials
+function logoutIcon(){
+  document.getElementById('loguser').value = '';
+  document.getElementById('logpass').value = '';
+  alert('Cleared login fields. You can now enter a different username and password.');
+}
+
+// Reset saved account so a new user can register
+function resetAccount(){
+  if(!confirm('This will remove the saved account so you can register a new user. Continue?')) return;
+  localStorage.removeItem('username');
+  localStorage.removeItem('password');
+  alert('Saved account removed. Please create a new account.');
+  showPage('register');
+}
+
+// Login history helpers
+function getLoginHistory(){
+  try{ return JSON.parse(localStorage.getItem('loginHistory')||'[]'); }
+  catch(e){ return []; }
+}
+
+function renderLoginHistory(){
+  var list = getLoginHistory();
+  var container = document.getElementById('historyList');
+  container.innerHTML = '';
+  if(list.length===0){ container.innerHTML = '<p>No logins recorded yet.</p>'; return; }
+
+  var table = document.createElement('table');
+  table.style.margin = '0 auto';
+  table.style.borderCollapse = 'collapse';
+
+  var thead = document.createElement('thead');
+  var hrow = document.createElement('tr');
+  ['#','User','Timestamp','Local Time'].forEach(function(t){
+    var th = document.createElement('th'); th.innerText = t;
+    th.style.border = '1px solid #ccc'; th.style.padding = '6px 10px';
+    hrow.appendChild(th);
+  });
+  thead.appendChild(hrow); table.appendChild(thead);
+
+  var tbody = document.createElement('tbody');
+  list.forEach(function(entry, idx){
+    var tr = document.createElement('tr');
+    [idx+1, entry.user, entry.time, new Date(entry.time).toLocaleString()].forEach(function(v){
+      var td = document.createElement('td'); td.innerText = v;
+      td.style.border = '1px solid #ddd'; td.style.padding = '6px 10px';
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  container.appendChild(table);
+}
+
+function showHistory(){
+  showPage('loginHistory');
+  renderLoginHistory();
+}
+
+function clearHistory(){
+  if(!confirm('Clear all login history?')) return;
+  localStorage.removeItem('loginHistory');
+  renderLoginHistory();
+}
+
+// Open course
+function openCourse(name){
+  if(name=="python") showPage("pythonCourse");
+  else if(name=="frontend") showPage("frontendCourse");
+  else if(name=="backend") showPage("backendCourse");
+  else if(name=="java") showPage("javaCourse");
+  else if(name=="c") showPage("cCourse");
+  else if(name=="cpp") showPage("cppCourse");
+  else alert(name + " course coming soon");
+}
+
+// Quiz checker for any course
+function checkQuiz(courseId,prefix,answers){
+  var name=document.getElementById(courseId+"Name").value;
+  if(name==""){ alert("Enter your name"); return; }
+
+  var score=0;
+
+  for(var i=1;i<=10;i++){
+
+    var options=document.getElementsByName(prefix + "q" + i);
+    var selected=false;
+
+    // remove old answer message
+    var old=document.getElementById(prefix+"ans"+i);
+    if(old) old.remove();
+
+    for(var j=0;j<options.length;j++){
+
+      options[j].parentElement.classList.remove("correct","wrong");
+
+      if(options[j].checked){
+        selected=true;
+
+        if(options[j].value==answers["q"+i]){
+
+          options[j].parentElement.classList.add("correct");
+          score++;
+
+        }else{
+
+          options[j].parentElement.classList.add("wrong");
+
+          // highlight correct option
+          var correctOption=document.querySelector(
+          "input[name='"+prefix+"q"+i+"'][value='"+answers["q"+i]+"']");
+
+          if(correctOption)
+          correctOption.parentElement.classList.add("correct");
+
+          // show correct answer text
+          var msg=document.createElement("p");
+          msg.id=prefix+"ans"+i;
+          msg.className="correct";
+          msg.innerHTML="Correct Answer: "
+          correctOption.parentElement.innerText;
+
+          options[options.length-1].parentElement.appendChild(msg);
+        }
+      }
+    }
+  }
+
+  alert(name+" Your Score: "+score+"/10");
+  
+  // show certificate button when full score
+  try{
+    var quizSection = document.getElementById(courseId+"Quiz");
+    if(score===10){
+      var btnId = courseId+"CertBtn";
+      var existing = document.getElementById(btnId);
+      if(!existing){
+        var br = document.createElement('br');
+        var btn = document.createElement('button');
+        btn.id = btnId;
+        btn.style.marginTop = '12px';
+        btn.innerText = 'Generate Certificate';
+        btn.onclick = function(){ showCertificatePreview(courseId, name); };
+        quizSection.appendChild(br);
+        quizSection.appendChild(btn);
+        try{ localStorage.setItem('completed_'+courseId, '1'); }catch(e){}
+        try{ if(typeof triggerSparklesGlobal === 'function') triggerSparklesGlobal(36); }catch(e){}
+        try{ if(typeof checkAllCompleted === 'function') checkAllCompleted(); }catch(e){}
+      } else {
+        existing.style.display = 'inline-block';
+      }
+    } else {
+      var b = document.getElementById(courseId+"CertBtn"); if(b) b.style.display='none';
+    }
+  }catch(e){ console.error('Could not show certificate button', e); }
+}
+
+function generateCertificate(courseId, studentName){
+  // create high-res canvas and draw final certificate then download
+  var canvas = document.createElement('canvas'); canvas.width = 2000; canvas.height = 1400;
+  var ctx = canvas.getContext('2d');
+  drawCertificateOn(ctx, canvas.width, canvas.height, courseId, studentName);
+  var link = document.createElement('a');
+  link.download = 'certificate-'+courseId+'-'+studentName.replace(/\s+/g,'_')+'.png';
+  link.href = canvas.toDataURL('image/png'); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+}
+
+// draw certificate on given context at specified size (used by preview and final)
+function drawCertificateOn(ctx, W, H, courseId, studentName){
+  // background gradient
+  var bg = ctx.createLinearGradient(0,0,W,H); bg.addColorStop(0,'#f8fafc'); bg.addColorStop(0.5,'#ffffff'); bg.addColorStop(1,'#eef6ff'); ctx.fillStyle = bg; ctx.fillRect(0,0,W,H);
+  // decorative
+  ctx.strokeStyle = '#e6eefc'; ctx.lineWidth = Math.max(4, W*0.006);
+  function corner(x,y,dx,dy){ ctx.beginPath(); ctx.moveTo(x,y+20*dy); ctx.quadraticCurveTo(x,y,x+20*dx,y); ctx.stroke(); }
+  corner(40,40,1,1); corner(W-40,40,-1,1); corner(40,H-40,1,-1); corner(W-40,H-40,-1,-1);
+  // inner frame
+  ctx.strokeStyle = '#f2c94c'; ctx.lineWidth = Math.max(6, W*0.008); ctx.strokeRect(W*0.05, W*0.05, W*0.9, H- W*0.1);
+  // watermark
+  ctx.save(); ctx.globalAlpha = 0.06; ctx.fillStyle = '#000'; ctx.font = Math.floor(W*0.08)+'px Poppins, sans-serif'; ctx.textAlign = 'center'; ctx.translate(W/2, H/2+60); ctx.rotate(-0.15); ctx.fillText('Hamikagadu🎓🎓', 0, 0); ctx.restore();
+  // logo
+  var logoX = Math.floor(W*0.11), logoY = Math.floor(H*0.14), logoR = Math.floor(W*0.05);
+  var g = ctx.createLinearGradient(logoX-logoR,logoY-logoR,logoX+logoR,logoY+logoR); g.addColorStop(0,'#6a11cb'); g.addColorStop(1,'#2575fc'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(logoX, logoY, logoR,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = Math.floor(W*0.05)+'px Poppins, sans-serif'; ctx.textAlign='center'; ctx.fillText('H', logoX, logoY+Math.floor(W*0.02));
+  ctx.textAlign='left'; ctx.fillStyle='#0b3d91'; ctx.font=Math.floor(W*0.03)+'px Poppins, sans-serif'; ctx.fillText('Hamikagadu🎓🎓', logoX+logoR+Math.floor(W*0.02), logoY-Math.floor(W*0.01));
+  ctx.font=Math.floor(W*0.015)+'px Poppins, sans-serif'; ctx.fillStyle='#4b5563'; ctx.fillText('LEARN 👩‍🏫👩‍🏫  GAIN 📈📈 SHINE 🌟🌟', logoX+logoR+Math.floor(W*0.02), logoY+Math.floor(W*0.02));
+  // title
+  ctx.textAlign='center'; ctx.fillStyle='#0b3d91'; ctx.font = Math.floor(W*0.04)+'px Poppins, sans-serif'; ctx.fillText('🎓🎓Certificate of Completion🎓🎓', W/2, Math.floor(H*0.22));
+  // ribbon
+  var ribbonY = Math.floor(H*0.32), ribbonW = Math.floor(W*0.48);
+  ctx.fillStyle='#2575fc'; ctx.fillRect(W/2-ribbonW/2, ribbonY-Math.floor(W*0.03), ribbonW, Math.floor(W*0.06));
+  ctx.fillStyle='#fff'; ctx.font = Math.floor(W*0.02)+'px Poppins, sans-serif'; ctx.fillText('Completed:', W/2-ribbonW/4, ribbonY+Math.floor(W*0.005));
+  var nameMap = { python:'Python', frontend:'Frontend', backend:'Backend', java:'Java', c:'C', cpp:'C++' };
+  var iconMap = { python:'🐍', frontend:'🖥️', backend:'🗄️', java:'☕', c:'🔣', cpp:'➕➕' };
+  var courseTitle = (nameMap[courseId]||courseId)+' Course'; ctx.font=Math.floor(W*0.03)+'px Poppins, sans-serif'; ctx.fillText((iconMap[courseId]||'🎓')+' '+courseTitle, W/2+Math.floor(W*0.08), ribbonY+Math.floor(W*0.005));
+  // student name
+  ctx.font = Math.floor(W*0.05)+'px Poppins, sans-serif'; ctx.fillStyle='#111'; ctx.fillText(studentName, W/2, Math.floor(H*0.48));
+  // subtitle
+    // subtitle
+  ctx.font = Math.floor(W*0.02)+'px Poppins, sans-serif'; ctx.fillStyle='#374151'; ctx.fillText ('has successfully completed all requirements for the', W/2, Math.floor(H*0.54));
+  
+  ctx.font = Math.floor(W*0.028)+'px Poppins, sans-serif'; ctx.fillStyle='#111'; ctx.fillText(courseTitle, W/2, Math.floor(H*0.585));
+  
+  ctx.font = Math.floor(W*0.028)+'px Poppins, sans-serif'; ctx.fillStyle='#111'; ctx.fillText(courseTitle, W/2, Math.floor(H*0.585));
+  
+  ctx.font = Math.floor(W*0.03)+'px Poppins, sans-serif'; ctx.fillStyle='#374151'; ctx.fillText ('We appreciate his/her active participation,consistent effort,and impressive contribution to the overall success of the course.', W/2, Math.floor(H*0.54));
+  
+  ctx.font = Math.floor(W*0.04)+'px Poppins, sans-serif'; ctx.fillStyle='#374151'; ctx.fillText ('We wish his/her all the best in future endeavors', W/2, Math.floor(H*0.54));
+  
+  ctx.font = Math.floor(W*0.05)+'px Poppins, sans-serif'; ctx.fillStyle='#374151'; ctx.fillText ('We wish them continued success.', W/2, Math.floor(H*0.54));
+
+  ctx.font = Math.floor(W*0.028)+'px Poppins, sans-serif'; ctx.fillStyle='#111'; ctx.fillText(courseTitle, W/2, Math.floor(H*0.585));
+  // seal
+  var sealX = Math.floor(W*0.85), sealY = Math.floor(H*0.75), sealR = Math.floor(W*0.06);
+  ctx.beginPath(); ctx.fillStyle='#f2c94c'; ctx.arc(sealX, sealY, sealR,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#b87333'; ctx.font=Math.floor(W*0.02)+'px Poppins, sans-serif'; ctx.textAlign='center'; ctx.fillText('Award', sealX, sealY+Math.floor(W*0.01));
+  // signature
+  ctx.strokeStyle='#111'; ctx.lineWidth= Math.max(1, W*0.0015); ctx.beginPath(); ctx.moveTo(Math.floor(W*0.1), Math.floor(H*0.84)); ctx.lineTo(Math.floor(W*0.42), Math.floor(H*0.84)); ctx.stroke(); ctx.font=Math.floor(W*0.018)+'px Poppins, sans-serif'; ctx.textAlign='left'; ctx.fillText('Instructor', Math.floor(W*0.1), Math.floor(H*0.86));
+  // date & footer
+  var d = new Date(); ctx.textAlign='right'; ctx.fillStyle='#374151'; ctx.font=Math.floor(W*0.015)+'px Poppins, sans-serif'; ctx.fillText('Date: '+d.toLocaleDateString(), W-Math.floor(W*0.07), H-Math.floor(W*0.06));
+  ctx.textAlign='center'; ctx.fillStyle='#6b7280'; ctx.font=Math.floor(W*0.015)+'px Poppins, sans-serif'; ctx.fillText('Hamikagadu • learn , gain , shine', W/2, H-Math.floor(W*0.03));
+}
+
+  
+// show animated preview (confetti + shimmer) and allow download/close
+function showCertificatePreview(courseId, studentName){
+  // overlay
+  var overlay = document.createElement('div'); overlay.className='cert-overlay';
+  var modal = document.createElement('div'); modal.className='cert-modal'; overlay.appendChild(modal);
+  var canvas = document.createElement('canvas'); canvas.width = 1000; canvas.height = 700; canvas.style.display='block'; canvas.style.maxWidth='100%'; modal.appendChild(canvas);
+  var controls = document.createElement('div'); controls.className='cert-controls';
+  var download = document.createElement('button'); download.className='cert-btn'; download.innerText='Download'; download.onclick=function(){ generateCertificate(courseId, studentName); };
+  var close = document.createElement('button'); close.className='cert-btn cert-close'; close.innerText='Close'; close.onclick=function(){ cancelAnim(); document.body.removeChild(overlay); };
+  controls.appendChild(download); controls.appendChild(close); modal.appendChild(controls);
+  document.body.appendChild(overlay);
+
+  var ctx = canvas.getContext('2d'); drawCertificateOn(ctx, canvas.width, canvas.height, courseId, studentName);
+
+  // confetti particles
+  var particles = [];
+  for(var i=0;i<120;i++){ particles.push({x: Math.random()*canvas.width, y: Math.random()*-canvas.height, w:6+Math.random()*8, h:8+Math.random()*8, vx:(Math.random()-0.5)*2, vy:2+Math.random()*4, c:['#ff4d4f','#ffd166','#6ee7b7','#82aaff'][Math.floor(Math.random()*4)] }); }
+
+  var rafId;
+  function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawCertificateOn(ctx, canvas.width, canvas.height, courseId, studentName);
+    // shimmer over name: moving gradient
+    var t = Date.now()/800 % (canvas.width*2);
+    var grad = ctx.createLinearGradient(t-canvas.width,0,t,0); grad.addColorStop(0,'rgba(255,255,255,0)'); grad.addColorStop(0.5,'rgba(255,255,255,0.35)'); grad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = grad; ctx.fillRect(canvas.width*0.2, canvas.height*0.42, canvas.width*0.6, canvas.height*0.12);
+    // draw particles
+    particles.forEach(function(p){ p.x += p.vx; p.y += p.vy; p.vy += 0.03; ctx.fillStyle = p.c; ctx.fillRect(p.x, p.y, p.w, p.h); if(p.y>canvas.height+50){ p.y = -20; p.x = Math.random()*canvas.width; p.vy = 2+Math.random()*3; } });
+    rafId = requestAnimationFrame(animate);
+  }
+  animate();
+  function cancelAnim(){ if(rafId) cancelAnimationFrame(rafId); }
+}
+
+//--- Voice assistant helpers (Web Speech API) ---
+var currentUtterance = null;
+var isVoiceOn = false; // single source of truth
+
+function collectReadableText(el){
+  if(!el) return '';
+  function isHidden(node){
+    if(node.nodeType!==1) return false;
+    var cs = window.getComputedStyle(node);
+    if(!cs) return false;
+    if(cs.display==='none' || cs.visibility==='display' || parseFloat(cs.opacity||1)===0) return true;
+    return false;
+  }
+  var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+    acceptNode: function(node){
+      if(!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      var parent = node.parentElement;
+      while(parent && parent!==el){
+        if(/^(SCRIPT|STYLE|NOSCRIPT)$/i.test(parent.tagName)) return NodeFilter.FILTER_REJECT;
+        if(isHidden(parent)) return NodeFilter.FILTER_REJECT;
+        parent = parent.parentElement;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  }, false);
+  var parts = [];
+  while(walker.nextNode()){
+    var node = walker.currentNode;
+    var txt = node.nodeValue.replace(/\s+/g,' ').trim();
+    if(txt) parts.push(txt);
+  }
+  var extras = [];
+  var elems = el.querySelectorAll('[aria-label],[alt],button,input,select,textarea');
+  for(var i=0;i<elems.length;i++){
+    var e = elems[i];
+    if(isHidden(e)) continue;
+    if(e.getAttribute('aria-label')) extras.push(e.getAttribute('aria-label'));
+    if(e.getAttribute('alt')) extras.push(e.getAttribute('alt'));
+    if(e.tagName==='BUTTON' || e.tagName==='INPUT' || e.tagName==='TEXTAREA' || e.tagName==='SELECT'){
+      var v = (e.innerText || e.value || '').trim(); if(v) extras.push(v);
+    }
+  }
+  return parts.concat(extras).join('. ');
+}
+
+function chooseFemaleVoice(voices){
+  var femaleRegex = /(female|woman|zira|samantha|kendra|amy|susan|emma|nora|olivia|aria|bella|anna|victoria|alice)/i;
+  var chosen = voices.find(function(v){ return femaleRegex.test(v.name || '') || femaleRegex.test(v.voiceURI || ''); });
+  if(!chosen){
+    chosen = voices.find(function(v){ return (/^en/i).test(v.lang) && /samantha|kendra|emma|nora|olivia|zira|amy|anna|victoria|alice/i.test(v.name || ''); });
+  }
+  if(!chosen){
+    chosen = voices.find(function(v){ return (/^en/i).test(v.lang); });
+  }
+  return chosen;
+}
+
+function speakSection(sectionId){
+  try{
+    if(!('speechSynthesis' in window)){ alert('Speech synthesis not supported in this browser.'); return; }
+    stopSpeaking();
+    var el = document.getElementById(sectionId);
+    if(!el){ alert('Section not found: '+sectionId); return; }
+    var text = collectReadableText(el);
+    if(!text){ alert('No readable text found in this section.'); return; }
+
+    var utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US'; utter.rate = 1; utter.pitch = 1;
+
+    function chooseAndSpeak(){
+      try{
+        var voices = window.speechSynthesis.getVoices() || [];
+        var chosen = chooseFemaleVoice(voices);
+        if(chosen) utter.voice = chosen;
+      }catch(e){ console.warn('voice selection failed', e); }
+      utter.onstart = function(){ currentUtterance = utter; try{ showAnimatedWoman(); }catch(e){} };
+      utter.onend = function(){ currentUtterance = null; try{ hideAnimatedWoman(); }catch(e){} };
+      utter.onerror = function(){ currentUtterance = null; try{ hideAnimatedWoman(); }catch(e){} };
+      currentUtterance = utter;
+      try{ showAnimatedWoman(); }catch(e){}
+      window.speechSynthesis.speak(utter);
+    }
+
+    var voicesNow = window.speechSynthesis.getVoices();
+    if(!voicesNow || voicesNow.length===0){
+      window.speechSynthesis.onvoiceschanged = function(){ window.speechSynthesis.onvoiceschanged = null; chooseAndSpeak(); };
+      setTimeout(function(){ if(!currentUtterance) chooseAndSpeak(); }, 300);
+    } else chooseAndSpeak();
+
+  }catch(e){ console.error('speakSection error', e); alert('Could not start speech: '+e.message); }
+}
+
+function stopSpeaking(){
+  try{ window.speechSynthesis.cancel(); currentUtterance = null; try{ hideAnimatedWoman(); }catch(e){}; isVoiceOn = false; }
+  catch(e){ console.error('stopSpeaking', e); }
+}
+
+function showCartoonAssistant(){
+  try{
+    isVoiceOn = true;
+    var c = document.getElementById('cartoonAssistant'); if(!c) return; c.style.display='flex'; c.setAttribute('aria-hidden','false'); c.classList.add('speaking');
+  }catch(e){ console.warn(e); }
+}
+
+function hideCartoonAssistant(){
+  try{ isVoiceOn = false; var c = document.getElementById('cartoonAssistant'); if(!c) return; c.classList.remove('speaking'); setTimeout(function(){ c.style.display='none'; c.setAttribute('aria-hidden','true'); }, 200); }
+  catch(e){}
+}
+
+// --- Animated assistant visual controls ---
+var assistantActive = false;
+var assistantPersistent = false;
+var assistantScrollHandler = null;
+function showAnimatedWoman(){
+  try{
+    var c = document.getElementById('cartoonAssistant'); if(!c) return;
+    // ensure element is attached to body (prevents being hidden by other containers in some browsers)
+    if(c.parentNode !== document.body) document.body.appendChild(c);
+    c.style.display = 'flex'; c.setAttribute('aria-hidden','false');
+    c.classList.add('speaking'); assistantActive = true;
+  }catch(e){ console.warn(e); }
+}
+
+function hideAnimatedWoman(){
+  try{
+    var c = document.getElementById('cartoonAssistant'); if(!c) return;
+    c.classList.remove('speaking'); assistantActive = false;
+    setTimeout(function(){ c.style.display='none'; c.setAttribute('aria-hidden','true'); }, 180);
+  }catch(e){ console.warn(e); }
+}
+
+function startAssistant(){
+  try{
+    assistantPersistent = true;
+    showAnimatedWoman();
+    // start speaking but show assistant even if speech fails in Edge
+    try{ speakCurrent(); }catch(e){ console.warn('speakCurrent failed', e); }
+
+    // robust cross-browser scroll/end detection (works in Edge)
+    if(!assistantScrollHandler){
+      assistantScrollHandler = function(){
+        try{
+          var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+          var winH = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight || 0;
+          var docH = Math.max(document.documentElement.scrollHeight, document.body.scrollHeight, document.documentElement.offsetHeight, document.body.offsetHeight);
+          // threshold to avoid immediate trigger due to rounding
+          var threshold = 4;
+          if((winH + scrollTop) >= (docH - threshold)){
+            // reached bottom — stop assistant
+            stopAssistant();
+          }
+        }catch(e){ console.warn(e); }
+      };
+      window.addEventListener('scroll', assistantScrollHandler, {passive:true});
+      window.addEventListener('resize', assistantScrollHandler, {passive:true});
+    }
+  }catch(e){ console.warn(e); }
+}
+
+function stopAssistant(){
+  try{
+    stopSpeaking(); hideAnimatedWoman();
+    assistantPersistent = false;
+    if(assistantScrollHandler){ window.removeEventListener('scroll', assistantScrollHandler); assistantScrollHandler = null; }
+  }catch(e){ console.warn(e); }
+}
+
+function isVoiceCurrentlyOn(){ return isVoiceOn; }
+
+function speakCurrent(){
+  var id = window.currentSectionId;
+  if(!id){ var sections = document.getElementsByClassName('section'); for(var i=0;i<sections.length;i++){ if(sections[i].style.display && sections[i].style.display!=='none'){ id = sections[i].id; break; } } }
+  if(!id){ alert('No visible section to read.'); return; }
+  speakSection(id);
+}
+
+
+
+// --- Puzzle game (matching pairs) ---
+function openPuzzle(courseId){
+  // prepare puzzle section title and reset
+  var sec = document.getElementById('puzzleGame');
+  if(!sec) return;
+  sec.setAttribute('data-course', courseId);
+  sec.querySelector('.puzzle-title').innerText = (courseId.charAt(0).toUpperCase()+courseId.slice(1)) + ' Puzzle';
+  // build and show
+  initPuzzle(courseId);
+  showPage('puzzleGame');
+}
+
+function initPuzzle(courseId){
+  var container = document.getElementById('puzzleBoard');
+  container.innerHTML = '';
+  var icons = {
+    python:['def','print','list','dict','loop','lambda','tuple','class'],
+    frontend:['div','style','CSS','JS','DOM','SVG','Flex','Grid'],
+    backend:['API','DB','Auth','Cache','Queue','REST','RPC','Server'],
+    java:['class','public','static','void','new','extends','interface','package'],
+    c:['#include','pointer','malloc','sizeof','struct','header','stack','heap'],
+    cpp:['template','std::','operator','namespace','RAII','vector','pointer','class']
+  };
+  var pool = icons[courseId] || ['concept','example','term','definition','note','tip','hint','badge'];
+  // duplicate and shuffle
+  // allow up to 8 pairs (16 cards) depending on pool size
+  var pairs = Math.min(pool.length, 8);
+  var cards = pool.slice(0,pairs).concat(pool.slice(0,pairs));
+  for(var i=cards.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=cards[i]; cards[i]=cards[j]; cards[j]=t; }
+  // create cards
+  cards.forEach(function(symbol, idx){
+    var card = document.createElement('div'); card.className='puzzle-card'; card.dataset.symbol = symbol;
+    // show smaller font for longer words
+    var backContent = '<div class="puzzle-inner"><div class="puzzle-front">?</div><div class="puzzle-back" style="font-size:'+ (symbol.length>8? '18px':'24px') +'">'+symbol+'</div></div>';
+    card.innerHTML = backContent;
+    card.onclick = onCardClick;
+    container.appendChild(card);
+  });
+  // dynamic grid columns based on card count
+  var cols = Math.min(6, Math.max(2, Math.ceil(Math.sqrt(cards.length))));
+  container.style.gridTemplateColumns = 'repeat('+cols+',1fr)';
+  // set contextual hint
+  var hints = {
+    python: 'Match Python keywords and concepts',
+    frontend: 'Match frontend tags, CSS/JS concepts',
+    backend: 'Match backend terms and components',
+    java: 'Match Java keywords and concepts',
+    c: 'Match C language concepts and symbols',
+    cpp: 'Match C++ concepts and keywords'
+  };
+  var hintEl = document.querySelector('#puzzleGame p');
+  if(hintEl) hintEl.innerText = hints[courseId] || 'Match the pairs — click cards to reveal.';
+  // reset state
+  window.puzzleState = { first:null, busy:false, matched:0, total:cards.length };
+}
+
+function onCardClick(evt){
+  var el = evt.currentTarget;
+  if(window.puzzleState.busy) return;
+  if(el.classList.contains('matched') || el.classList.contains('flipped')) return;
+  el.classList.add('flipped');
+  if(!window.puzzleState.first){ window.puzzleState.first = el; return; }
+  var a = window.puzzleState.first; var b = el;
+  if(a.dataset.symbol === b.dataset.symbol){
+    a.classList.add('matched'); b.classList.add('matched'); window.puzzleState.matched +=2; window.puzzleState.first = null;
+    if(window.puzzleState.matched === window.puzzleState.total){
+      setTimeout(function(){ showPuzzleSuccess(); },300);
+    }
+  } else {
+    window.puzzleState.busy = true;
+    setTimeout(function(){ a.classList.remove('flipped'); b.classList.remove('flipped'); window.puzzleState.first = null; window.puzzleState.busy = false; }, 800);
+  }
+}
+
+function closePuzzle(){ stopSpeaking(); showPage('courses'); }
+
+// --- Hand wave helper ---
+function waveHand(el){
+  try{
+    if(!el) return;
+    el.classList.remove('waving');
+    void el.offsetWidth; // restart animation
+    el.classList.add('waving');
+    setTimeout(function(){ el.classList.remove('waving'); }, 1200);
+  }catch(e){console.warn(e)}
+}
+
+// --- Sparkle particle API ---
+function _createSparkle(x, y, sizeClass, delay){
+  var s = document.createElement('div'); s.className = 'sparkle '+sizeClass;
+  s.style.left = (x - 8 + (Math.random()*24-12)) + 'px';
+  s.style.top = (y - 8 + (Math.random()*24-12)) + 'px';
+  s.style.opacity = 0;
+  s.style.transform = 'translateY(0) scale(0.4) rotate(0deg)';
+  s.style.transition = 'opacity 140ms linear';
+  if(delay) s.style.animationDelay = (delay/1000)+'s';
+  document.getElementById('sparkleOverlay').appendChild(s);
+  // trigger CSS animation
+  requestAnimationFrame(function(){
+    try{
+      s.style.animation = 'sparkleRise 1100ms ease-out forwards';
+    }catch(e){ }
+  });
+  // cleanup
+  setTimeout(function(){ try{ if(s && s.parentNode) s.parentNode.removeChild(s); }catch(e){} }, 1500 + (delay||0));
+}
+
+function triggerSparklesAt(x, y, count){
+  count = count || 20;
+  for(var i=0;i<count;i++){
+    var size = (Math.random()<0.6)?'small':(Math.random()<0.6?'medium':'large');
+    _createSparkle(x + (Math.random()*80-40), y + (Math.random()*60-30), size, Math.floor(Math.random()*300));
+  }
+}
+
+function triggerSparklesGlobal(count){
+  count = count || 80;
+  var W = window.innerWidth, H = window.innerHeight;
+  for(var i=0;i<count;i++){
+    var x = Math.random()*W; var y = Math.random()*H*0.6 + H*0.1;
+    var size = (Math.random()<0.6)?'small':(Math.random()<0.6?'medium':'large');
+    _createSparkle(x,y,size, Math.floor(Math.random()*600));
+  }
+}
+
+// mark course completion and check all
+function checkAllCompleted(){
+  try{
+    var courses = ['python','frontend','backend','java','c','cpp'];
+    var all = courses.every(function(c){ return localStorage.getItem('completed_'+c); });
+    if(all){
+      setTimeout(function(){ triggerSparklesGlobal(140); alert('Amazing — you completed quizzes in all courses!'); }, 300);
+      setTimeout(function(){ triggerSparklesGlobal(140); alert('Amazing — you completed drag and dropin all courses!'); }, 300);
+    }
+  }catch(e){console.warn(e)}
+}
+
+// --- Puzzle success / failure overlays ---
+function showPuzzleSuccess(){
+  try{
+    var board = document.getElementById('puzzleBoard');
+    var rect = board.getBoundingClientRect();
+    var x = rect.left + rect.width/2; var y = rect.top + rect.height/3;
+    triggerSparklesAt(x,y, 34);
+    playSuccessSound();
+    var o = document.createElement('div'); o.className = 'emoji-overlay'; o.innerText = '🎉'; document.body.appendChild(o);
+    setTimeout(function(){ try{o.classList.add('fadeout'); if(o && o.parentNode) o.parentNode.removeChild(o);}catch(e){} }, 1600);
+  }catch(e){ console.warn(e); alert('Completed!'); }
+}
+
+function showPuzzleFailure(){
+  try{
+    playFailSound();
+    var o = document.createElement('div'); o.className = 'emoji-overlay sad'; o.innerText = '😢';
+    // apply shake after pop
+    o.addEventListener('animationend', function(){ o.style.animation = 'emojiShake 800ms ease-in-out'; });
+    document.body.appendChild(o);
+    setTimeout(function(){ try{ if(o && o.parentNode) o.parentNode.removeChild(o);}catch(e){} }, 1600);
+  }catch(e){ console.warn(e); }
+}
+
+// --- Simple WebAudio melodies (no external files) ---
+function _playMelody(notes, tempo, type){
+  try{
+    var ctx = new (window.AudioContext || window.webkitAudioContext)();
+    var t = 0;
+    notes.forEach(function(n){
+      var osc = ctx.createOscillator();
+      var g = ctx.createGain();
+      osc.type = type||'sine';
+      osc.frequency.value = n.freq;
+      g.gain.setValueAtTime(0.0001, ctx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(n.vol || 0.15, ctx.currentTime + t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + t + (n.dur || tempo) - 0.02);
+      osc.connect(g); g.connect(ctx.destination);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + (n.dur || tempo));
+      t += (n.dur || tempo) * 0.9;
+    });
+    // close context after melody
+    setTimeout(function(){ try{ ctx.close(); }catch(e){} }, Math.max(800, notes.length * tempo * 1.2));
+  }catch(e){ console.warn('audio err', e); }
+}
+
+function playSuccessSound(){
+  // simple ascending 'wow' arpeggio
+  var notes = [
+    {freq: 523.25, dur: 120, vol:0.12},
+    {freq: 659.25, dur: 120, vol:0.12},
+    {freq: 783.99, dur: 160, vol:0.14},
+    {freq: 1046.5, dur: 220, vol:0.16}
+  ];
+  _playMelody(notes, 140, 'sine');
+}
+
+function playFailSound(){
+  // short descending 'oh no' minor sigh with lower timbre
+  var notes = [
+    {freq:392.0, dur:140, vol:0.12},
+    {freq:349.23, dur:160, vol:0.11},
+    {freq:311.13, dur:180, vol:0.10},
+    {freq:220.00, dur:220, vol:0.1}
+  ];
+  _playMelody(notes, 160, 'triangle');
+}
+
+function evaluatePuzzle(){
+  try{
+    if(window.puzzleState && window.puzzleState.matched === window.puzzleState.total){ showPuzzleSuccess(); }
+    else{ showPuzzleFailure(); }
+  }catch(e){ console.warn(e); }
+}
+
+</script>
+<script>
+// Generic drag & drop quiz implementation for all courses
+function initDragQuiz(courseId){
+  var container = document.getElementById(courseId + 'DragQuiz');
+  if(!container) return;
+  container.innerHTML = '';
+
+  var dataMap = {
+    python: {
+      pool: ['def','print','list','dict','class','lambda','tuple','for'],
+      targets: ['Defines a function','Outputs to console','Ordered collection','Key-value store','Defines a class','Anonymous function','Immutable sequence','Loop statement']
+    },
+    frontend: {
+      pool: ['<div>','<style>','CSS','JS','DOM','SVG','Flex','Grid'],
+      targets: ['HTML element container','CSS style block','Cascading Style Sheets','JavaScript language','Document Object Model','Scalable Vector Graphics','Flexbox layout','Grid layout']
+    },
+    backend: {
+      pool: ['API','DB','Auth','Cache','Queue','REST','Server','SQL'],
+      targets: ['Application Programming Interface','Database','Authentication','Cache system','Message Queue','RESTful style','Server process','Structured Query Language']
+    },
+    java: {
+      pool: ['class','public','static','void','new','extends','interface','package'],
+      targets: ['Defines class','Access modifier','Static keyword','No return type','Create object','Inherit from','Interface type','Package namespace']
+    },
+    c: {
+      pool: ['#include','pointer','malloc','sizeof','struct','header','stack','heap'],
+      targets: ['Include header','Pointer variable','Allocate memory','Size operator','Struct type','Header file','Call stack','Heap memory']
+    },
+    cpp: {
+      pool: ['template','std::','operator','namespace','RAII','vector','pointer','class'],
+      targets: ['Templates','Standard namespace','Operator overload','Namespace','Resource management','Vector container','Pointer','Class']
+    }
+  };
+
+  var info = dataMap[courseId] || dataMap['python'];
+  // build pool area
+  var pool = document.createElement('div'); pool.className = 'drag-pool';
+  // build targets area
+  var targets = document.createElement('div'); targets.className = 'drop-row'; targets.style.display='flex'; targets.style.flexWrap='wrap'; targets.style.justifyContent='center'; targets.style.gap='12px';
+
+  // create targets with correct keys
+  info.targets.forEach(function(tgt, idx){
+    var key = info.pool[idx];
+    var box = document.createElement('div'); box.className = 'drop-target'; box.style.minWidth='180px'; box.style.padding='10px'; box.dataset.correct = key; box.innerHTML = '<div style="font-size:12px;color:#374151;margin-bottom:6px">'+tgt+'</div><div class="placed" style="min-height:28px"></div>';
+    box.addEventListener('dragover', function(e){ e.preventDefault(); });
+    box.addEventListener('drop', function(e){ e.preventDefault(); var k = e.dataTransfer.getData('text/plain'); if(!k) return; // clear previous
+      // if another target already has this key, clear it
+      var existing = document.querySelector('[data-got="'+k+'"]'); if(existing){ existing.dataset.got = ''; var p= existing.querySelector('.placed'); if(p) p.innerText=''; }
+      box.dataset.got = k; var placed = box.querySelector('.placed'); placed.innerText = k; placed.style.fontWeight='600'; placed.style.color='#111'; placed.setAttribute('draggable','true'); placed.addEventListener('dragstart', function(ev){ ev.dataTransfer.setData('text/plain', k); setTimeout(function(){ placed.style.opacity='0.6'; }, 10); });
+      // hide pool item
+      var poolItem = document.querySelector('.drag-item[data-key="'+k+'"]'); if(poolItem) poolItem.style.visibility='hidden';
+    });
+    targets.appendChild(box);
+  });
+
+  // create pool items (shuffled)
+  var keys = info.pool.slice(); for(var i=keys.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=keys[i]; keys[i]=keys[j]; keys[j]=t; }
+  keys.forEach(function(k){ var it = document.createElement('div'); it.className='drag-item'; it.draggable = true; it.dataset.key = k; it.innerText = k; it.style.userSelect='none'; it.addEventListener('dragstart', function(e){ e.dataTransfer.setData('text/plain', k); }); pool.appendChild(it); });
+
+  container.appendChild(pool); container.appendChild(targets);
+}
+
+function checkDragQuiz(courseId){
+  var container = document.getElementById(courseId + 'DragQuiz'); if(!container) return;
+  var targets = container.querySelectorAll('.drop-target'); var correct=0; targets.forEach(function(t){ var want = t.dataset.correct; var got = t.dataset.got || (t.querySelector('.placed')? t.querySelector('.placed').innerText.trim() : ''); if(want && got && want===got){ t.classList.add('correct'); t.classList.remove('wrong'); correct++; } else { t.classList.add('wrong'); t.classList.remove('correct'); } });
+  alert('You matched '+correct+' out of '+targets.length+' pairs.');
+  if(correct === targets.length){ 
+    try{ triggerSparklesGlobal(48); playSuccessSound(); }catch(e){}
+    // Enhanced sparkle animation for drag drop completion
+    triggerDragDropSparkles(container);
+  }
+}
+
+// Enhanced sparkle animation for drag drop completion
+function triggerDragDropSparkles(container) {
+  if (!container) return;
+  
+  // Get container position
+  var rect = container.getBoundingClientRect();
+  var centerX = rect.left + rect.width / 2;
+  var centerY = rect.top + rect.height / 2;
+  
+  // Create sparkle container
+  var sparkleContainer = document.createElement('div');
+  sparkleContainer.className = 'drag-sparkle-container';
+  sparkleContainer.style.position = 'fixed';
+  sparkleContainer.style.top = '0';
+  sparkleContainer.style.left = '0';
+  sparkleContainer.style.width = '100%';
+  sparkleContainer.style.height = '100%';
+  sparkleContainer.style.pointerEvents = 'none';
+  sparkleContainer.style.zIndex = '9999';
+  sparkleContainer.style.overflow = 'hidden';
+  document.body.appendChild(sparkleContainer);
+  
+  // Sparkle colors
+  var colors = ['drag-sparkle-gold', 'drag-sparkle-silver', 'drag-sparkle-rainbow', 'drag-sparkle-blue', 'drag-sparkle-pink', 'drag-sparkle-green'];
+  
+  // Create multiple sparkles
+  for (var i = 0; i < 50; i++) {
+    setTimeout(function() {
+      var sparkle = document.createElement('div');
+      
+      // Random position around the container
+      var x = centerX + (Math.random() * rect.width - rect.width / 2);
+      var y = centerY + (Math.random() * rect.height - rect.height / 2);
+      
+      // Random size
+      var size = 8 + Math.random() * 20;
+      
+      // Random color class
+      var colorClass = colors[Math.floor(Math.random() * colors.length)];
+      
+      // 20% chance for star shape
+      if (Math.random() < 0.2) {
+        sparkle.className = 'drag-sparkle-particle drag-sparkle-star ' + colorClass;
+        sparkle.style.width = size + 'px';
+        sparkle.style.height = size + 'px';
+      } else {
+        sparkle.className = 'drag-sparkle-particle ' + colorClass;
+        sparkle.style.width = size + 'px';
+        sparkle.style.height = size + 'px';
+      }
+      
+      sparkle.style.left = x + 'px';
+      sparkle.style.top = y + 'px';
+      sparkle.style.position = 'absolute';
+      
+      // Random animation delay
+      sparkle.style.animationDelay = (Math.random() * 0.5) + 's';
+      
+      sparkleContainer.appendChild(sparkle);
+      
+      // Remove sparkle after animation
+      setTimeout(function() {
+        if (sparkle.parentNode) {
+          sparkle.parentNode.removeChild(sparkle);
+        }
+      }, 2500);
+      
+    }, i * 30); // Stagger the sparkles
+  }
+  
+  // Add success glow to correct answers
+  var correctTargets = container.querySelectorAll('.drop-target.correct');
+  correctTargets.forEach(function(target) {
+    target.classList.add('drag-drop-complete');
+    target.classList.add('drag-success-glow');
+    setTimeout(function() {
+      target.classList.add('active');
+    }, 100);
+  });
+  
+  // Remove container after animation
+  setTimeout(function() {
+    if (sparkleContainer.parentNode) {
+      sparkleContainer.parentNode.removeChild(sparkleContainer);
+    }
+  }, 3000);
+  
+  // Play celebration sound
+  playSuccessSound();
+}
+function playSuccessSound(){
+  // simple ascending 'wow' arpeggio
+  var notes = [
+    {freq: 523.25, dur: 120, vol:0.12},
+    {freq: 659.25, dur: 120, vol:0.12},
+    {freq: 783.99, dur: 160, vol:0.14},
+    {freq: 1046.5, dur: 220, vol:0.16}
+  ];
+  _playMelody(notes, 140, 'sine');
+}
+
+function playFailSound(){
+  // short descending 'oh no' minor sigh with lower timbre
+  var notes = [
+    {freq:392.0, dur:140, vol:0.12},
+    {freq:349.23, dur:160, vol:0.11},
+    {freq:311.13, dur:180, vol:0.10},
+    {freq:220.00, dur:220, vol:0.1}
+  ];
+  _playMelody(notes, 160, 'triangle');
+}
+</script>
+</head>
+<body onload="showPage('landing')">
+<header>
+<h1>Online Learning Platform</h1>
+</header>
+
+
+<!-- Sparkle overlay (particles appended here) -->
+<div id="sparkleOverlay" class="sparkle-overlay" aria-hidden="true"></div>
+
+<!-- Global voice control (visible on all pages) -->
+<div id="voiceControl" aria-label="Voice control">
+  <button id="voiceSpeakBtn" title="Speak current page" onclick="startAssistant()">🔊</button>
+  <button id="voiceStopBtn" title="Stop speaking" onclick="stopAssistant()">⏹️</button>
+</div>
+
+<!-- Sparkle overlay (particles appended here) -->
+<div id="sparkleOverlay" class="sparkle-overlay" aria-hidden="true"></div>
+
+<!-- Cartoon assistant (appears when speaking) -->
+<div id="cartoonAssistant" class="cartoon-assist" aria-hidden="true" style="display:none;" role="status" aria-live="polite">
+  <!-- Inline animated woman SVG (lightweight) -->
+  <svg class="assistant-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="assistant-face">
+      <!-- hair -->
+      <path d="M20,50 C18,36 28,22 48,22 C68,22 78,36 76,50 C92,52 98,74 82,86 C62,102 34,102 22,86 C10,70 18,56 20,50 Z" fill="#2b2b2b" />
+      <!-- face -->
+      <ellipse cx="50" cy="56" rx="24" ry="28" fill="#f6d7c9" stroke="#e6bdb0" stroke-width="0.5" />
+      <!-- eyes -->
+      <circle cx="42" cy="56" r="3" fill="#111" />
+      <circle cx="58" cy="56" r="3" fill="#111" />
+      <!-- mouth (animated) -->
+      <g class="assistant-mouth" transform="translate(0,0)">
+        <ellipse cx="50" cy="68" rx="8" ry="4" fill="#b33" />
+      </g>
+    </g>
+    <!-- waving hand -->
+    <g class="assistant-hand" transform="translate(82,70)">
+      <ellipse cx="10" cy="8" rx="10" ry="8" fill="#f6d7c9" stroke="#e6bdb0" stroke-width="0.4" />
+      <path d="M2,6 Q10,-6 18,6" stroke="#f6d7c9" stroke-width="6" stroke-linecap="round" fill="none" opacity="0.6"/>
+    </g>
+  </svg>
+</div>
+
+<!-- LANDING: logo, site name and welcome button -->
+<div id="landing" class="section">
+  <div style="max-width:520px;margin:40px auto;text-align:center;color:white;">
+    <!-- simple SVG logo: book + graduation cap -->
+    <svg width="140" height="140" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 12px;">
+      <defs>
+        <linearGradient id="g1" x1="0" x2="1">
+          <stop offset="0" stop-color="#6a11cb" />
+          <stop offset="1" stop-color="#2575fc" />
+        </linearGradient>
+      </defs>
+      <rect x="6" y="22" width="52" height="26" rx="2" fill="url(#g1)" opacity="0.12" />
+      <path d="M6 26c12-6 20-6 32 0 12-6 20-6 32 0" transform="scale(.5) translate(0,18)" fill="none" stroke="url(#g1)" stroke-width="2"/>
+      <g transform="translate(10,6) scale(.9)">
+        <path d="M20 6 L32 0 L44 6 L32 12 Z" fill="url(#g1)" />
+        <rect x="12" y="12" width="40" height="28" rx="2" fill="#fff" />
+        <path d="M12 14 L52 14" stroke="#eee" stroke-width="1" />
+      </g>
+    </svg>
+    <h1 class="site-title">Hamikagadu 🎓🎓</h1>
+    <p class="site-tagline">LEARN 👩‍🏫👩‍🏫  GAIN 📈📈  SHINE 🌟🌟</p>
+    <button onclick="showPage('welcome')" style="padding:12px 22px;font-size:16px;border-radius:8px;">Welcome</button>
+  </div>
+</div>
+
+<!-- WELCOME: next page with register/login choices -->
+<div id="welcome" class="section">
+  <h2>Welcome to Hamikagadu <span class="hand-wave" role="img" aria-hidden="true" onclick="waveHand(this)">👋</span></h2>
+  <p>Please choose how you'd like to continue</p>
+  <button onclick="showPage('register')">New Register</button>
+  &nbsp;
+  <button onclick="showPage('login')">Login</button>
+</div>
+
+<!-- REGISTER -->
+<div id="register" class="section">
+<h2>Register <span class="hand-wave" role="img" aria-hidden="true" onclick="waveHand(this)">👋</span></h2>
+<input type="text" id="reguser" placeholder="Username"><br>
+<input type="password" id="regpass" placeholder="Password"><br>
+<br><br>
+<button onclick="register()">Register</button>
+</div>
+
+<!-- LOGIN -->
+<div id="login" class="section">
+  <div class="login-icons">
+    <button class="icon-btn" title="Clear fields (logout)" onclick="logoutIcon()">🔓</button>
+    <button class="icon-btn" title="Remove saved account" onclick="resetAccount()">🗑️</button>
+    <button class="icon-btn" title="View login history" onclick="showHistory()">📜</button>
+  </div>
+<h2>Login <span class="hand-wave" role="img" aria-hidden="true" onclick="waveHand(this)">👋</span></h2>
+<input type="text" id="loguser" placeholder="Username"><br>
+<input type="password" id="logpass" placeholder="Password"><br>
+<br><br>
+</button>
+<button onclick="login()">Login</button>
+<div style="margin-top:8px;">
+  <button style="background:transparent;color:#333;border:none;text-decoration:underline;cursor:pointer;padding:0" onclick="forgotPassword()">Forgot Password?</button>
+</div>
+</div>
+
+<!-- LOGIN HISTORY -->
+<div id="loginHistory" class="section">
+  <h2>Login History</h2>
+  <div id="historyList" style="width:80%;margin:auto;text-align:left;"></div>
+  <br>
+  <button onclick="clearHistory()">Clear History</button>
+  &nbsp;
+  <button onclick="showPage('login')">Back</button>
+</div>
+
+<!-- COURSES LIST -->
+<div id="courses" class="section">
+<h2>Course List</h2>
+<div class="box" onclick="openCourse('python')">Python</div>
+<div class="box" onclick="openCourse('frontend')">Frontend</div>
+<div class="box" onclick="openCourse('backend')">Backend</div>
+<div class="box" onclick="openCourse('java')">Java</div>
+<div class="box" onclick="openCourse('c')">C</div>
+<div class="box" onclick="openCourse('cpp')">C++</div>
+<br><br>
+<button onclick="showPage('login')">Back</button>
+</div>
+
+<!-- PUZZLE GAME (shared for all courses) -->
+<div id="puzzleGame" class="section">
+  <h2 class="puzzle-title">Puzzle</h2>
+  <p>Match the pairs — click cards to reveal. Animated flip effects included.</p>
+  <div id="puzzleBoard" style="width:min(640px,90%);margin:12px auto;display:grid;grid-template-columns:repeat(4,1fr);gap:10px;align-items:stretch;"></div>
+  <br>
+  <button onclick="closePuzzle()">Close</button>
+  <button onclick="initPuzzle(document.getElementById('puzzleGame').getAttribute('data-course')||'')">Restart</button>
+  <button onclick="evaluatePuzzle()">Finish</button>
+</div>
+
+<!-- ==========================
+  Repeat for each course: Python, Frontend, Backend, Java, C, C++
+=========================== -->
+
+<!-- PYTHON COURSE -->
+<div id="pythonCourse" class="section">
+<h2>Python Course</h2>
+<div class="box" onclick="showPage('pythonExplain')">Explanation</div>
+<div class="box" onclick="showPage('pythonVideo')">Video Tutorial</div>
+<div class="box" onclick="showPage('pythonCode')">Sample Code</div>
+<div class="box" onclick="showPage('pythonQuiz')">Quiz</div>
+<div class="box" onclick="openPuzzle('python')">Puzzle</div>
+<br><br>
+<button onclick="showPage('courses')">Back</button>
+</div>
+
+<div id="pythonExplain" class="section">
+<h2>Python Explanation</h2>
+<div style="margin:12px 0;">
+  <button onclick="showPage('pythonSub1')">1. Overview</button>
+  <button onclick="showPage('pythonSub2')">2. Syntax</button>
+  <button onclick="showPage('pythonSub3')">3. Data Types</button>
+  <button onclick="showPage('pythonSub4')">4. Control Flow</button>
+  <button onclick="showPage('pythonSub5')">5. Examples</button>
+</div>
+<p>Python is a simple and powerful high-level programming language widely used in AI, web, automation, and data science.</p>
+<ul style="text-align:left;width:60%;margin:auto;">
+<li>Object Oriented Programming.</li>
+<li>Procedural Programming.</li>
+<li>Functional Programming.</li>
+<li>Python is a high-level programming language.</li>
+<li>It was created by  Guido van Rossum in 1991.</li>
+<li>Python is easy to learn and easy to read.</li>
+<li>It is widely used for web development.</li>
+<li>Python has a large standard library and a large community.</li>
+<li>It is an interpreted language.</li>
+<li>Python is dynamically typed.</li>
+<li>It supports multiple programming paradigms.</li>
+<li>It can run Windows,linux,and mac.</li>
+<li>Python has a large standard libra.</li>
+</ul>
+<p>Popular companies using Python: Google, Netflix, Instagram.</p>
+<br><br>
+<button onclick="showPage('pythonCourse')">Back</button>
+</div>
+
+<!-- Python subtopics -->
+<div id="pythonSub1" class="section">
+  <h2>Python — Overview</h2>
+  <p>Python is a high-level, interpreted programming language known for its simple syntax and readability. It is one of the most popular programming languages in the world.</p>
+  <p>Python was created by Guido van Rossum and first released in 1991.</p>
+
+  <h3>Uses of Python</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Web Development</li>
+    <li>Data Science</li>
+    <li>Artificial Intelligence</li>
+    <li>Machine Learning</li>
+    <li>Automation</li>
+    <li>Game Development</li>
+    <li>Software Development</li>
+  </ul>
+
+  <h3>Features of Python</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Easy to learn and use</li>
+    <li>Simple and readable syntax</li>
+    <li>Open-source and free</li>
+    <li>Works on multiple platforms (Windows, Mac, Linux)</li>
+    <li>Large community support</li>
+    <li>Supports object-oriented programming</li>
+  </ul>
+
+  <button onclick="showPage('pythonExplain')">Back</button>
+</div>
+<div id="pythonSub2" class="section">
+  <h2>Python — Syntax</h2>
+  <p>Syntax refers to the rules that define how a Python program is written.</p>
+
+  <h3>Example — Hello World</h3>
+  <pre>print("Hello World")</pre>
+  <p>Output</p>
+  <pre>Hello World</pre>
+
+  <h3>Variables Example</h3>
+  <p>Variables are used to store data.</p>
+  <pre>name = "Harini"
+age = 20
+
+print(name)
+print(age)</pre>
+
+  <h3>Indentation in Python</h3>
+  <p>Python uses indentation (spaces) to define blocks of code.</p>
+  <pre>if 5 &gt; 2:
+    print("Five is greater than two")</pre>
+
+  <button onclick="showPage('pythonExplain')">Back</button>
+</div>
+
+<div id="pythonSub3" class="section">
+  <h2>Python — Data Types</h2>
+  <p>Data types define the type of value stored in a variable.</p>
+
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Data Type</th><th>Example</th></tr>
+    <tr><td>Integer</td><td>10</td></tr>
+    <tr><td>Float</td><td>10.5</td></tr>
+    <tr><td>String</td><td>"Hello"</td></tr>
+    <tr><td>Boolean</td><td>True / False</td></tr>
+    <tr><td>List</td><td>[1, 2, 3]</td></tr>
+    <tr><td>Tuple</td><td>(1, 2, 3)</td></tr>
+    <tr><td>Dictionary</td><td>{"name": "Harini"}</td></tr>
+  </table>
+
+  <h3>Example Program</h3>
+  <pre>a = 10
+b = 10.5
+c = "Python"
+d = True
+
+print(a)
+print(b)
+print(c)
+print(d)</pre>
+
+  <button onclick="showPage('pythonExplain')">Back</button>
+</div>
+
+<div id="pythonSub4" class="section">
+  <h2>Python — Control Flow</h2>
+  <p>Control flow determines the order in which statements are executed in a program.</p>
+
+  <h3>If Statement</h3>
+  <pre>age = 18
+
+if age &gt;= 18:
+    print("You can vote")</pre>
+
+  <h3>If–Else Statement</h3>
+  <pre>num = 10
+
+if num % 2 == 0:
+    print("Even number")
+else:
+    print("Odd number")</pre>
+
+  <h3>For Loop</h3>
+  <pre>for i in range(5):
+    print(i)
+
+# Output:
+# 0
+# 1
+# 2
+# 3
+# 4</pre>
+
+  <h3>While Loop</h3>
+  <pre>i = 1
+
+while i &lt;= 5:
+    print(i)
+    i = i + 1</pre>
+
+  <button onclick="showPage('pythonExplain')">Back</button>
+</div>
+
+<div id="pythonSub5" class="section">
+  <h2>Python — Examples</h2>
+
+  <h3>Example 1 — Addition Program</h3>
+  <pre>a = 10
+b = 20
+
+sum = a + b
+
+print("Sum =", sum)</pre>
+  <p>Output</p>
+  <pre>Sum = 30</pre>
+
+  <h3>Example 2 — Even or Odd Program</h3>
+  <pre>num = 7
+
+if num % 2 == 0:
+    print("Even")
+else:
+    print("Odd")</pre>
+  <p>Output</p>
+  <pre>Odd</pre>
+
+  <h3>Example 3 — Multiplication Table</h3>
+  <pre>num = 5
+
+for i in range(1, 11):
+    print(num, "x", i, "=", num * i)</pre>
+  <p>Output (partial)</p>
+  <pre>5 x 1 = 5
+5 x 2 = 10
+5 x 3 = 15
+...
+5 x 10 = 50</pre>
+
+  <button onclick="showPage('pythonExplain')">Back</button>
+</div>
+
+<div id="pythonVideo" class="section">
+<h2>Python Tutorial Videos</h2>
+
+<a href="https://www.youtube.com/watch?v=rfscVS0vtbw" target="_blank">1. Python Full Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=kqtD5dpn9C8" target="_blank">2. Python for Beginners</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=_uQrJ0TkZlc" target="_blank">3. Python Programming Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=HGOBQPFzWKo" target="_blank">4. Python Full Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=rfscVS0vtbw&t=2000s" target="_blank">5. Python Basics</a><br><br>
+<br><br>
+<button onclick="showPage('pythonCourse')">Back</button>
+</div>
+
+<div id="pythonCode" class="section">
+<h2>Python Sample Code</h2>
+<pre>
+# Simple Student Marks Program
+
+name = "Arun"
+tamil = 80
+english = 75
+maths = 90
+science = 85
+
+total = tamil + english + maths + science
+average = total / 4
+
+print("Student Name:", name)
+print("Total Marks:", total)
+print("Average Marks:", average)
+</pre>
+<h3>Output</h3>
+<pre>
+Student Name: Arun
+Total Marks: 330
+Average Marks: 82.5
+</pre>
+<p>Download Python App:</p>
+<a href="https://play.google.com/store/apps/details?id=ru.iiec.pydroid3" target="_blank">Pydroid 3</a>
+</pre>
+<div id="pythonDragQuiz" class="drag-quiz"></div>
+<div class="drag-quiz controls" style="justify-content:center;gap:8px;margin-top:10px">
+  <button onclick="initDragQuiz('python')">Start Drag & Drop Quiz</button>
+  <button onclick="checkDragQuiz('python')">Check Answers</button>
+  <button onclick="showPage('pythonCourse')">Back</button>
+</div>
+</div>
+
+<div id="pythonQuiz" class="section">
+<h2>Python Quiz</h2>
+<input type="text" id="pythonName" placeholder="Enter your name">
+<div class="quiz-box">
+<p>1. Which keyword is used to define a function?</p>
+<label><input type="radio" name="pq1" value="a"> class</label> 
+<label><input type="radio" name="pq1" value="b"> def</label> 
+<label><input type="radio" name="pq1" value="c"> fun</label>
+<label><input type="radio" name="pq1" value="d"> function </label>
+
+<p> 2. Which symbol is used for comments?</p> 
+<label><input type="radio" name="pq2" value="a"> //</label> 
+<label><input type="radio" name="pq2" value="b"> #</label> 
+<label><input type="radio" name="pq2" value="c"> /*</label> 
+<label><input type="radio" name="pq2" value="d"> -- </label> 
+     
+<p> 3. Which function prints output?</p> 
+<label><input type="radio" name="pq3" value="a"> echo</label>
+<label><input type="radio" name="pq3" value="b"> write</label> 
+<label><input type="radio" name="pq3" value="c"> print</label> 
+<label><input type="radio" name="pq3" value="d"> display </label>
+    
+<p>4. Python file extension is?</p>
+<label><input type="radio" name="pq4" value="a"> .html</label> 
+<label><input type="radio" name="pq4" value="b"> .py</label>
+<label><input type="radio" name="pq4" value="c"> .java</label>
+<label><input type="radio" name="pq4" value="d"> .txt </label> 
+
+<p>5. Which loop is used in Python?</p> 
+<label><input type="radio" name="pq5" value="a"> for</label> 
+<label><input type="radio" name="pq5" value="b"> repeat</label> 
+<label><input type="radio" name="pq5" value="c"> loop</label>
+<label><input type="radio" name="pq5" value="d"> iterate </label>
+<p> 6. Which is a Python data type?</p> 
+<label><input type="radio" name="pq6" value="a"> list</label>
+<label><input type="radio" name="pq6" value="b"> page</label>
+<label><input type="radio" name="pq6" value="c"> screen</label> 
+<label><input type="radio" name="pq6" value="d"> web </label>
+
+<p> 7. 10 is which data type?</p> 
+<label><input type="radio" name="pq7" value="a"> int</label> 
+<label><input type="radio" name="pq7" value="b"> string</label>
+<label><input type="radio" name="pq7" value="c"> float</label> 
+<label><input type="radio" name="pq7" value="d"> char </label>
+
+<p> 8. Which loop repeats until condition false?</p>
+<label><input type="radio" name="pq8" value="a"> while</label> 
+<label><input type="radio" name="pq8" value="b"> for</label> 
+<label><input type="radio" name="pq8" value="c"> do</label> 
+<label><input type="radio" name="pq8" value="d"> repeat </label>
+
+<p> 9. Which function is used for user input?</p> 
+<label><input type="radio" name="pq9" value="a"> scan</label> 
+<label><input type="radio" name="pq9" value="b"> read</label> 
+<label><input type="radio" name="pq9" value="c"> input</label>
+<label><input type="radio" name="pq9" value="d"> enter </label>
+
+<p> 10. Which symbol is used for multiplication?</p> 
+<label><input type="radio" name="pq10" value="a"> +</label> 
+<label><input type="radio" name="pq10" value="b"> -</label>
+<label><input type="radio" name="pq10" value="c"> *</label> 
+<label><input type="radio" name="pq10" value="d">/</label>
+</div>
+<button onclick='checkQuiz("python","p",{q1:"b",q2:"b",q3:"c",q4:"b",q5:"a",q6:"a",q7:"a",q8:"a",q9:"c",q10:"c"})'>Submit Quiz</button>
+<br><br>
+<button onclick="showPage('pythonCourse')">Back</button>
+</div>
+
+<!-- FRONTEND COURSE -->
+<div id="frontendCourse" class="section">
+<h2>Frontend Course</h2>
+<div class="box" onclick="showPage('frontendExplain')">Explanation</div>
+<div class="box" onclick="showPage('frontendVideo')">Video Tutorial</div>
+<div class="box" onclick="showPage('frontendCode')">Sample Code</div>
+<div class="box" onclick="showPage('frontendQuiz')">Quiz</div>
+<div class="box" onclick="openPuzzle('frontend')">Puzzle</div>
+<br><br>
+<button onclick="showPage('courses')">Back</button>
+</div>
+
+<div id="frontendExplain" class="section">
+<h2>Frontend Explanation</h2>
+<div style="margin:12px 0;">
+  <button onclick="showPage('frontendSub1')">1. Overview</button>
+  <button onclick="showPage('frontendSub2')">2. Structure (HTML)</button>
+  <button onclick="showPage('frontendSub3')">3. Styling (CSS)</button>
+  <button onclick="showPage('frontendSub4')">4. Interactivity (JS)</button>
+  <button onclick="showPage('frontendSub5')">5. Examples</button>
+</div>
+<p>Frontend development creates the UI of a website using HTML, CSS, JS.</p>
+<ul style="text-align:left;width:60%;margin:auto;">
+<li>Frontend is the part of a website that users see and interact with.</li>
+<li>It is also called client-side development.</li>
+<li>Frontend mainly uses HTML,CSS,and JavaScript.</li>
+<li>HTML is used to create the structure of a webpage.</li>
+<li>CSS is used to design and style the webpage.</li>
+<li>JavaScript is used to add interactivity to the website.</li>
+<li>Frontend controls layout,colors,fonts,and buttons.</li>
+<li>It makes website user-friendly and attractive.</li>
+<li>Frontend developers design menus,forms,images,and navigation bars.</li>
+<li>It works directly in the web browser.</li>
+<li>It improve user experience (UX) of a website.</li>
+<li>Browsers like Chrome,Edge,and Firefox run frontend code.</li>
+<li>Frontend testing ensures the website works correctly. </li>
+</ul>
+<p>Popular companies using frontend: Facebook,Amazon,Infosys.</p>
+<br><Br>
+<button onclick="showPage('frontendCourse')">Back</button>
+</div>
+
+<!-- Frontend subtopics -->
+<div id="frontendSub1" class="section">
+  <h2>Frontend — Overview</h2>
+  <p>Frontend development is the part of web development that users see and interact with in a web browser.</p>
+  <p>It focuses on designing and building the visual layout, structure, and interactive elements of a website.</p>
+
+  <h3>Main Technologies Used in Frontend</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li><strong>HTML</strong> – Structure of the webpage</li>
+    <li><strong>CSS</strong> – Styling and layout</li>
+    <li><strong>JavaScript</strong> – Interactivity and dynamic behavior</li>
+  </ul>
+
+  <h3>Responsibilities of a Frontend Developer</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Design user-friendly interfaces</li>
+    <li>Create responsive layouts</li>
+    <li>Improve website performance</li>
+    <li>Ensure cross-browser compatibility</li>
+    <li>Work with UI/UX designs</li>
+  </ul>
+
+  <button onclick="showPage('frontendExplain')">Back</button>
+</div>
+
+<div id="frontendSub2" class="section">
+  <h2>Frontend — Structure (HTML)</h2>
+  <p>HTML is used to create the structure of a webpage. It defines elements like headings, paragraphs, images, links, and more.</p>
+
+  <h3>Basic HTML Structure</h3>
+  <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;My Website&lt;/title&gt;
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;h1&gt;Welcome to My Website&lt;/h1&gt;
+&lt;p&gt;This is a simple webpage.&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+  <h3>Explanation of HTML Structure</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Tag</th><th>Purpose</th></tr>
+    <tr><td>&lt;!DOCTYPE html&gt;</td><td>Defines the document type</td></tr>
+    <tr><td>&lt;html&gt;</td><td>Root element of the webpage</td></tr>
+    <tr><td>&lt;head&gt;</td><td>Contains metadata and title</td></tr>
+    <tr><td>&lt;title&gt;</td><td>Title shown in browser tab</td></tr>
+    <tr><td>&lt;body&gt;</td><td>Visible content of the webpage</td></tr>
+  </table>
+
+  <h3>Common HTML Elements</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Heading: &lt;h1&gt;Main Heading&lt;/h1&gt;</li>
+    <li>Paragraph: &lt;p&gt;This is a paragraph.&lt;/p&gt;</li>
+    <li>Image: &lt;img src="image.jpg" alt="Example Image"&gt;</li>
+    <li>Link: &lt;a href="https://www.google.com"&gt;Visit Google&lt;/a&gt;</li>
+    <li>List: &lt;ul&gt;&lt;li&gt;HTML&lt;/li&gt;&lt;li&gt;CSS&lt;/li&gt;&lt;li&gt;JavaScript&lt;/li&gt;&lt;/ul&gt;</li>
+  </ul>
+
+  <button onclick="showPage('frontendExplain')">Back</button>
+</div>
+
+<div id="frontendSub3" class="section">
+  <h2>Frontend — Styling (CSS)</h2>
+  <p>CSS is used to style and design the HTML elements. It controls colors, fonts, layout, spacing, and animations.</p>
+
+  <h3>CSS Example</h3>
+  <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+
+&lt;style&gt;
+
+body{
+    background-color: lightblue;
+}
+
+h1{
+    color: darkblue;
+    text-align: center;
+}
+
+p{
+    font-size: 18px;
+}
+
+&lt;/style&gt;
+
+&lt;/head&gt;
+
+&lt;body&gt;
+
+&lt;h1&gt;Frontend Development&lt;/h1&gt;
+&lt;p&gt;HTML creates structure and CSS adds style.&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+
+  <h3>CSS Selectors</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Selector</th><th>Example</th></tr>
+    <tr><td>Element</td><td>p {}</td></tr>
+    <tr><td>Class</td><td>.box {}</td></tr>
+    <tr><td>ID</td><td>#header {}</td></tr>
+  </table>
+
+  <h3>Example</h3>
+  <pre>.box{
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}</pre>
+
+  <h3>Inline / External CSS</h3>
+  <p>Inline example: &lt;p style="color:red;"&gt;This text is red.&lt;/p&gt;</p>
+  <p>External CSS (link to <em>style.css</em>): &lt;link rel="stylesheet" href="style.css"&gt;</p>
+
+  <button onclick="showPage('frontendExplain')">Back</button>
+</div>
+
+<div id="frontendSub4" class="section">
+  <h2>Frontend — Interactivity (JS)</h2>
+  <p>JavaScript is used to make websites interactive and dynamic. It allows the website to respond to user actions.</p>
+
+  <h3>Examples of JavaScript Interactivity</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Button click events</li>
+    <li>Form validation</li>
+    <li>Image sliders</li>
+    <li>Pop-up messages</li>
+    <li>Dynamic content updates</li>
+  </ul>
+
+  <button onclick="showPage('frontendExplain')">Back</button>
+</div>
+
+<div id="frontendSub5" class="section">
+  <h2>Frontend — Examples</h2>
+
+  <h3>Example 1 — Button Click Message</h3>
+  <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;body&gt;
+
+&lt;button onclick="showMessage()"&gt;Click Me&lt;/button&gt;
+
+&lt;script&gt;
+
+function showMessage(){
+alert("Hello! You clicked the button.");
+}
+
+&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+
+  <h3>Example 2 — Change Text</h3>
+  <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;body&gt;
+
+&lt;h2 id="text"&gt;Welcome&lt;/h2&gt;
+
+&lt;button onclick="changeText()"&gt;Change Text&lt;/button&gt;
+
+&lt;script&gt;
+
+function changeText(){
+document.getElementById("text").innerHTML = "Hello JavaScript!";
+}
+
+&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+
+  <h3>Example 3 — Change Background Color</h3>
+  <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+
+&lt;body&gt;
+
+&lt;button onclick="changeColor()"&gt;Change Color&lt;/button&gt;
+
+&lt;script&gt;
+
+function changeColor(){
+document.body.style.backgroundColor = "lightgreen";
+}
+
+&lt;/script&gt;
+
+&lt;/body&gt;
+
+&lt;/html&gt;</pre>
+
+  <button onclick="showPage('frontendExplain')">Back</button>
+</div>
+
+<div id="frontendVideo" class="section">
+<h2>Frontend Tutorial Videos</h2>
+
+<a href="https://www.youtube.com/watch?v=zJSY8tbf_ys" target="_blank">1. HTML CSS JavaScript Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=UB1O30fR-EE" target="_blank">2. HTML Crash Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=yfoY53QXEnI" target="_blank">3. CSS Crash Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=PkZNo7MFNFg" target="_blank">4. JavaScript Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=3PHXvlpOkf4" target="_blank">5. HTML Full Tutorial</a><br><br>
+<br><br>
+<button onclick="showPage('frontendCourse')">Back</button>
+</div>
+
+<div id="frontendCode" class="section">
+<h2>Frontend Sample Code</h2>
+<pre>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Simple Page</title>
+</head>
+<body>
+<h1>Welcome to Frontend</h1>
+<p>This is a simple HTML program.</p>
+</body>
+</html>
+</pre>
+<p>Download Frontend App:</p>
+<a href="https://play.google.com/store/apps/details?id=com.sololearn" target="_blank">SoloLearn</a>
+<br><br>
+<div id="frontendDragQuiz" class="drag-quiz"></div>
+<div class="drag-quiz controls" style="justify-content:center;gap:8px;margin-top:10px">
+  <button onclick="initDragQuiz('frontend')">Start Drag & Drop Quiz</button>
+  <button onclick="checkDragQuiz('frontend')">Check Answers</button>
+  <button onclick="showPage('frontendCourse')">Back</button>
+</div>
+</div>
+
+<div id="frontendQuiz" class="section">
+<h2>Frontend Quiz</h2>
+<input type="text" id="frontendName" placeholder="Enter your name">
+<div class="quiz-box">
+<p>1. What does HTML stand for</p>
+<label><input type="radio" name="fq1" value="a"> Hyper Text Markup Language</label> 
+<label><input type="radio" name="fq1" value="b"> High Text Machine Language</label> 
+<label><input type="radio" name="fq1" value="c"> Hyper Text Markup Language</label>
+<label><input type="radio" name="fq1" value="d"> Home Tool Markup Language </label>
+
+<p> 2. Which tag is used used to create a hyperlink in HTML?</p> 
+<label><input type="radio" name="fq2" value="a">link</label> 
+<label><input type="radio" name="fq2" value="b">a</label> 
+<label><input type="radio" name="fq2" value="c">href</label> 
+<label><input type="radio" name="fq2" value="d">hlink</label> 
+     
+<p> 3. Which HTML tag is used to insert an image?</p> 
+<label><input type="radio" name="fq3" value="a">image</label>
+<label><input type="radio" name="fq3" value="b">pic</label> 
+<label><input type="radio" name="fq3" value="c">img</label> 
+<label><input type="radio" name="fq3" value="d">src</label>
+    
+<p>4. Which language is used to style web pages? </p>
+<label><input type="radio" name="fq4" value="a">HTML</label> 
+<label><input type="radio" name="fq4" value="b">CSS</label>
+<label><input type="radio" name="fq4" value="c">Python</label>
+<label><input type="radio" name="fq4" value="d">SQL</label> 
+
+<p>5. Which CSS Property changes text color?</p> 
+<label><input type="radio" name="fq5" value="a">font-color</label> 
+<label><input type="radio" name="fq5" value="b">text-style</label> 
+<label><input type="radio" name="fq5" value="c">color</label>
+<label><input type="radio" name="fq5" value="d">background-color</label>
+
+<p> 6. Which HTML tag is used to create a list?</p> 
+<label><input type="radio" name="fq6" value="a">h6</label>
+<label><input type="radio" name="fq6" value="b">h3</label>
+<label><input type="radio" name="fq6" value="c">h1</label> 
+<label><input type="radio" name="fq6" value="d">head</label>
+
+<p> 7. Which symbol is used for comments in JavaScript</p> 
+<label><input type="radio" name="fq7" value="a">//</label> 
+<label><input type="radio" name="fq7" value="b">!-- --</label>
+<label><input type="radio" name="fq7" value="c">**</label> 
+<label><input type="radio" name="fq7" value="d">##</label>
+
+<p> 8. Which JavaScript function is used to display a message box?</p>
+<label><input type="radio" name="fq8" value="a">msg()</label> 
+<label><input type="radio" name="fq8" value="b">alert()</label> 
+<label><input type="radio" name="fq8" value="c">message()</label> 
+<label><input type="radio" name="fq8" value="d">box()</label>
+
+<p> 9. Which CSS property is used to change background color?</p> 
+<label><input type="radio" name="fq9" value="a">bg-color</label> 
+<label><input type="radio" name="fq9" value="b">background-color</label> 
+<label><input type="radio" name="fq9" value="c">color-background</label>
+<label><input type="radio" name="fq9" value="d">bgcolor</label>
+
+<p> 10. Which HTML element is used to create a list?</p> 
+<label><input type="radio" name="fq10" value="a">ul</label> 
+<label><input type="radio" name="fq10" value="b">list</label>
+<label><input type="radio" name="fq10" value="c">li</label> 
+<label><input type="radio" name="fq10" value="d">div</label>
+</div>
+<button onclick='checkQuiz("frontend","f",{q1:"a",q2:"b",q3:"c",q4:"b",q5:"c",q6:"c",q7:"a",q8:"b",q9:"b",q10:"a"})'>Submit Quiz</button>
+<br><br>
+<button onclick="showPage('frontendCourse')">Back</button>
+</div>
+
+<!-- BACKEND COURSE -->
+<div id="backendCourse" class="section">
+<h2>Backend Course</h2>
+<div class="box" onclick="showPage('backendExplain')">Explanation</div>
+<div class="box" onclick="showPage('backendVideo')">Video Tutorial</div>
+<div class="box" onclick="showPage('backendCode')">Sample Code</div>
+<div class="box" onclick="showPage('backendQuiz')">Quiz</div>
+<div class="box" onclick="openPuzzle('backend')">Puzzle</div>
+<br><br>
+<button onclick="showPage('courses')">Back</button>
+</div>
+
+<div id="backendExplain" class="section">
+<h2>Backend Explanation</h2>
+<div style="margin:12px 0;">
+  <button onclick="showPage('backendSub1')">1. Overview</button>
+  <button onclick="showPage('backendSub2')">2. Servers & Runtimes</button>
+  <button onclick="showPage('backendSub3')">3. Databases</button>
+  <button onclick="showPage('backendSub4')">4. APIs & Authentication</button>
+  <button onclick="showPage('backendSub5')">5. Examples</button>
+</div>
+<p>Backend is server-side programming. Uses Node.js, Python, Java, PHP etc.</p>
+<ul style="text-align:left;width:60%;margin:auto;">
+<li>Backend is the part of a website that works on the server side.</li>
+<li>It manages the logic,database,and server operations.</li>
+<li>Backend is not visible to users.</li>
+<li>It processes user requests from the frontend.</li>
+<li>Backend sends data to the frontend.</li>
+<li>It handle user authentication(login and signup).</li>
+<li>Backend stores information in a database.</li>
+<li>Backend manages data storage and retrieval.</li>
+<li>It handles server request and response.</li>
+<li>Backend frameworks help build applications faster.</li>
+<li>It manages file uploads and downloads.</li>
+<li>Example of frameworks are Django,Spring,and Express.js.</li>
+<li>Backend ensures website performance and stability.</li>
+</ul>
+<p>Popular companies using backend: Oracle,Meta Platform,IBM.</p>
+<br><br>
+<button onclick="showPage('backendCourse')">Back</button>
+</div>
+
+<div id="backendVideo" class="section">
+<h2>Backend Tutorial Video</h2>
+<a href="https://www.youtube.com/watch?v=Oe421EPjeBE" target="_blank">1. Backend Development Explained</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=ENrzD9HAZK4" target="_blank">2. Node.js Full Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=9M4XKi25I2M" target="_blank">3. Backend Roadmap</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=TlB_eWDSMt4" target="_blank">4. Express.js Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=HXV3zeQKqGY" target="_blank">5. SQL Database Tutorial</a><br><br>
+<br><br>
+<button onclick="showPage('backendCourse')">Back</button>
+</div>
+
+<!-- Backend subtopics -->
+<div id="backendSub1" class="section">
+  <h2>Backend — Overview</h2>
+  <p>Backend development refers to the server-side part of a web application. It is responsible for processing data, handling requests from the frontend, and communicating with databases.</p>
+  <p>While the frontend is what users see in the browser, the backend works behind the scenes to make everything function properly.</p>
+
+  <h3>Responsibilities of Backend Development</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Handle user requests</li>
+    <li>Process application logic</li>
+    <li>Store and retrieve data</li>
+    <li>Manage authentication and security</li>
+    <li>Connect frontend with databases</li>
+  </ul>
+
+  <h3>Popular Backend Languages</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Python</li>
+    <li>JavaScript (Node.js)</li>
+    <li>Java</li>
+    <li>PHP</li>
+    <li>Ruby</li>
+    <li>C#</li>
+  </ul>
+
+  <button onclick="showPage('backendExplain')">Back</button>
+</div>
+
+<div id="backendSub2" class="section">
+  <h2>Backend — Servers &amp; Runtimes</h2>
+  <p><strong>Servers</strong><br>A server is a computer or software that provides services to other computers (clients). When a user visits a website, the browser sends a request to a server. The server processes the request and sends back a response.</p>
+
+  <h3>Request Flow (example)</h3>
+  <ol style="text-align:left;width:60%;margin:auto;">
+    <li>User opens a website</li>
+    <li>Browser sends request to server</li>
+    <li>Server processes the request</li>
+    <li>Server sends webpage back to the browser</li>
+  </ol>
+
+  <h3>Popular Web Servers</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Apache</li>
+    <li>Nginx</li>
+    <li>Node.js Server</li>
+    <li>Microsoft IIS</li>
+  </ul>
+
+  <h3>Runtimes</h3>
+  <p>A runtime environment is a platform that allows programs to run on a server.</p>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Runtime</th><th>Language</th></tr>
+    <tr><td>Node.js</td><td>JavaScript</td></tr>
+    <tr><td>Python Runtime</td><td>Python</td></tr>
+    <tr><td>Java Virtual Machine (JVM)</td><td>Java</td></tr>
+  </table>
+
+  <p>Example: Node.js allows JavaScript to run on the server instead of only in the browser.</p>
+
+  <button onclick="showPage('backendExplain')">Back</button>
+</div>
+
+<div id="backendSub3" class="section">
+  <h2>Backend — Databases</h2>
+  <p>A database is used to store and manage data for a website or application (for example: user accounts, passwords, product details, orders, messages).</p>
+
+  <h3>Types of Databases</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Type</th><th>Example</th></tr>
+    <tr><td>Relational Database</td><td>MySQL, PostgreSQL</td></tr>
+    <tr><td>NoSQL Database</td><td>MongoDB, Firebase</td></tr>
+  </table>
+
+  <h3>Example Table (Users)</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>ID</th><th>Name</th><th>Email</th></tr>
+    <tr><td>1</td><td>Harini</td><td>harini@email.com</td></tr>
+    <tr><td>2</td><td>Madhu</td><td>madhu@email.com</td></tr>
+  </table>
+
+  <p>The backend retrieves and stores data in these databases as needed by the application.</p>
+
+  <button onclick="showPage('backendExplain')">Back</button>
+</div>
+
+<div id="backendSub4" class="section">
+  <h2>Backend — APIs &amp; Authentication</h2>
+  <p><strong>APIs (Application Programming Interfaces)</strong> allow different software systems to communicate with each other. The frontend sends requests to backend APIs, the backend processes the request, and returns data (usually JSON) to the frontend.</p>
+
+  <h3>Example API Request</h3>
+  <pre>GET /users</pre>
+
+  <h3>Example Response (JSON)</h3>
+  <pre>[
+  { "name": "Harini" },
+  { "name": "Madhu" }
+]</pre>
+
+  <h3>Authentication</h3>
+  <p>Authentication is the process of verifying the identity of a user (login with username/password, OTP, token-based methods).</p>
+  <p>Common Authentication Methods:</p>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Password Authentication</li>
+    <li>JWT (JSON Web Token)</li>
+    <li>OAuth</li>
+    <li>Session Authentication</li>
+  </ul>
+
+  <p>Authentication helps keep user data secure.</p>
+
+  <button onclick="showPage('backendExplain')">Back</button>
+</div>
+
+<div id="backendSub5" class="section">
+  <h2>Backend — Examples</h2>
+
+  <h3>Example 1 — Simple Node.js Server</h3>
+  <pre>const http = require('http');
+
+const server = http.createServer((req, res) =&gt; {
+    res.write("Hello from the backend server!");
+    res.end();
+});
+
+server.listen(3000);</pre>
+
+  <h3>Example 2 — Simple API (Express)</h3>
+  <pre>const express = require('express');
+const app = express();
+
+app.get('/users', (req, res) =&gt; {
+    res.json([
+        {name: "Harini"},
+        {name: "Ravi"}
+    ]);
+});
+
+app.listen(3000);</pre>
+
+  <h3>Example 3 — Database Query (SQL)</h3>
+  <pre>SELECT * FROM users;</pre>
+
+  <p>This retrieves all users from the database.</p>
+
+  <button onclick="showPage('backendExplain')">Back</button>
+</div>
+
+<div id="backendCode" class="section">
+<h2>Backend Sample Code</h2>
+<pre>
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Hello, this is backend server"
+
+if __name__ == "__main__":
+    app.run()
+</pre>
+<p>Download Backend App:</p>
+<a href="https://play.google.com/store/apps/details?id=com.replit.app" target="_blank">Replit</a>
+<br><br>
+<div id="backendDragQuiz" class="drag-quiz"></div>
+<div class="drag-quiz controls" style="justify-content:center;gap:8px;margin-top:10px">
+  <button onclick="initDragQuiz('backend')">Start Drag & Drop Quiz</button>
+  <button onclick="checkDragQuiz('backend')">Check Answers</button>
+  <button onclick="showPage('backendCourse')">Back</button>
+</div>
+</div>
+
+<div id="backendQuiz" class="section">
+<h2>Backend Quiz</h2>
+<input type="text" id="backendName" placeholder="Enter your name">
+<div class="quiz-box">
+<p>1. What is Backend Development? </p>
+<label><input type="radio" name="bq1" value="a">Designing website layout </label> 
+<label><input type="radio" name="bq1" value="b"> Server-side development</label> 
+<label><input type="radio" name="bq1" value="c"> Image editing</label>
+<label><input type="radio" name="bq1" value="d"> Animation creating</label>
+
+<p> 2. Which language is commonly used for backend development?</p> 
+<label><input type="radio" name="bq2" value="a">HTML</label> 
+<label><input type="radio" name="bq2" value="b">CSS</label> 
+<label><input type="radio" name="bq2" value="c">Python</label> 
+<label><input type="radio" name="bq2" value="d">Photoshop</label> 
+     
+<p> 3.  Which of the following is a backend framework?</p> 
+<label><input type="radio" name="bq3" value="a">Django</label>
+<label><input type="radio" name="bq3" value="b">Bootstrap</label> 
+<label><input type="radio" name="bq3" value="c">Tailwind</label> 
+<label><input type="radio" name="bq3" value="d">Figma</label>
+    
+<p>4. What is the main job of a backend server?</p>
+<label><input type="radio" name="bq4" value="a">Display colors</label> 
+<label><input type="radio" name="bq4" value="b">Handle database and logic</label>
+<label><input type="radio" name="bq4" value="c">Create animations</label>
+<label><input type="radio" name="bq4" value="d">Design icons</label> 
+
+<p>5.  Which database is commonly used in backend?</p> 
+<label><input type="radio" name="bq5" value="a">MySQL</label> 
+<label><input type="radio" name="bq5" value="b">Canva</label> 
+<label><input type="radio" name="bq5" value="c">Illustrator</label>
+<label><input type="radio" name="bq5" value="d">After Effects</label>
+
+<p> 6. What does API stand for? </p> 
+<label><input type="radio" name="bq6" value="a">Application Programming Interface</label>
+<label><input type="radio" name="bq6" value="b">Advanced Program Internet</label>
+<label><input type="radio" name="bq6" value="c">Automatic Program Integration</label> 
+<label><input type="radio" name="bq6" value="d">Application Process Internet</label>
+
+<p> 7. Which of the following is a backend runtime environment?</p> 
+<label><input type="radio" name="bq7" value="a">Node.js</label> 
+<label><input type="radio" name="bq7" value="b">React</label>
+<label><input type="radio" name="bq7" value="c">Angular</label> 
+<label><input type="radio" name="bq7" value="d">Bootstrap</label>
+
+<p>8. Backend mainly works with which part of a website?</p>
+<label><input type="radio" name="bq8" value="a">User Interface</label> 
+<label><input type="radio" name="bq8" value="b">Server</label> 
+<label><input type="radio" name="bq8" value="c">Fonts</label> 
+<label><input type="radio" name="bq8" value="d">Colors</label>
+
+<p> 9. Which HTTP method is used to get data from server?</p> 
+<label><input type="radio" name="bq9" value="a">POST</label> 
+<label><input type="radio" name="bq9" value="b">DELETE</label> 
+<label><input type="radio" name="bq9" value="c">GET</label>
+<label><input type="radio" name="bq9" value="d">PUT</label>
+
+<p> 10. Which company created Node.js?</p> 
+<label><input type="radio" name="bq10" value="a">Microsoft</label> 
+<label><input type="radio" name="bq10" value="b">Google</label>
+<label><input type="radio" name="bq10" value="c">Ryan Dalh</label> 
+<label><input type="radio" name="bq10" value="d">Facebook</dl></label>
+</div>
+<button onclick='checkQuiz("backend","b",{q1:"b",q2:"c",q3:"a",q4:"b",q5:"a",q6:"a",q7:"a",q8:"b",q9:"c",q10:"c"})'>Submit Quiz</button>
+<br><br>
+<button onclick="showPage('backendCourse')">Back</button>
+</div>
+
+<!-- =========================
+ Repeat same pattern for Java, C, C++
+=========================== -->
+
+<!-- JAVA COURSE -->
+<div id="javaCourse" class="section">
+<h2>Java Course</h2>
+<div class="box" onclick="showPage('javaExplain')">Explanation</div>
+<div class="box" onclick="showPage('javaVideo')">Video Tutorial</div>
+<div class="box" onclick="showPage('javaCode')">Sample Code</div>
+<div class="box" onclick="showPage('javaQuiz')">Quiz</div>
+<div class="box" onclick="openPuzzle('java')">Puzzle</div>
+<br><br>
+<button onclick="showPage('courses')">Back</button>
+</div>
+
+<div id="javaExplain" class="section">
+<h2>Java Explanation</h2>
+<div style="margin:12px 0;">
+  <button onclick="showPage('javaSub1')">1. Overview</button>
+  <button onclick="showPage('javaSub2')">2. Syntax & OOP</button>
+  <button onclick="showPage('javaSub3')">3. JVM & Tooling</button>
+  <button onclick="showPage('javaSub4')">4. Libraries & Frameworks</button>
+  <button onclick="showPage('javaSub5')">5. Examples</button>
+</div>
+<p>Java is object-oriented programming language widely used for apps, web, and backend.</p>
+<ul style="text-align:left;width:60%;margin:auto;">
+<li>Java is a high-level programming language.</li>
+<li>Java was developed by Sun Microsystems.</li>
+<li>Java is now owned by Oracle.</li>
+<li>Java is an object-oriented programming language.</li>
+<li>Java programs run on the Java Virtual Machine (JVM).</li>
+<li>Java follows the principle “Write Once, Run Anywhere.”.</li>
+<li>Java source files use the extension .java.</li>
+<li>Java programs are compiled using the javac compiler.</li>
+<li>The output file of Java is .class (bytecode).</li>
+<li>The main() method is the starting point of a Java program.</li>
+<li>Java has automatic memory management (Garbage Collection).</li>
+<li> Java is widely used for web applications.</li>
+<li>Java is a secure and platform-independent language.</li>
+</ul>
+<p>Popular companies using Java: Netflix,Uber,LinkedIn.</p>
+<br><br>
+<button onclick="showPage('javaCourse')">Back</button>
+</div>
+
+<div id="javaVideo" class="section">
+<h2>Java Tutorial Videos</h2>
+
+<a href="https://www.youtube.com/watch?v=grEKMHGYyns" target="_blank">1. Java Full Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=eIrMbAQSU34" target="_blank">2. Java Programming Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=UmnCZ7-9yDY" target="_blank">3. Java Beginner Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=A74TOX803D0" target="_blank">4. Java Basics</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=BGTx91t8q50" target="_blank">5. Java OOP Tutorial</a><br><br>
+<br><br>
+<button onclick="showPage('javaCourse')">Back</button>
+</div>
+
+<!-- Java subtopics -->
+<div id="javaSub1" class="section">
+  <h2>Java — Overview</h2>
+  <p>Java is a high-level, object-oriented programming language widely used for building web applications, mobile applications, and enterprise software.</p>
+  <p>Java was developed by James Gosling at Sun Microsystems in 1995.</p>
+
+  <p>Java follows the principle: <em>"Write Once, Run Anywhere (WORA)"</em> — Java programs can run on any system that has a Java Virtual Machine (JVM).</p>
+
+  <h3>Features of Java</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Object-Oriented Programming (OOP)</li>
+    <li>Platform Independent</li>
+    <li>Secure</li>
+    <li>Multithreaded</li>
+    <li>Robust and reliable</li>
+    <li>Large community support</li>
+  </ul>
+
+  <h3>Uses of Java</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Web applications</li>
+    <li>Android mobile apps</li>
+    <li>Desktop software</li>
+    <li>Enterprise systems</li>
+    <li>Cloud applications</li>
+  </ul>
+
+  <button onclick="showPage('javaExplain')">Back</button>
+</div>
+
+<div id="javaSub2" class="section">
+  <h2>Java — Syntax &amp; OOP</h2>
+  <p>Java programs follow a specific structure and syntax.</p>
+
+  <h3>Basic Java Program</h3>
+  <pre>public class HelloWorld {
+
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
+
+}</pre>
+
+  <h3>Explanation</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Part</th><th>Description</th></tr>
+    <tr><td>class</td><td>Defines a class</td></tr>
+    <tr><td>main()</td><td>Entry point of the program</td></tr>
+    <tr><td>System.out.println()</td><td>Prints output</td></tr>
+  </table>
+
+  <h3>Object-Oriented Programming (OOP)</h3>
+  <p>Java is based on OOP concepts which help organize code into objects and classes.</p>
+
+  <h4>Main OOP Concepts</h4>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li><strong>Class</strong> — Blueprint for creating objects</li>
+    <li><strong>Object</strong> — Instance of a class</li>
+    <li><strong>Inheritance</strong> — One class inherits another</li>
+    <li><strong>Encapsulation</strong> — Data hiding</li>
+    <li><strong>Polymorphism</strong> — Same method with different behavior</li>
+    <li><strong>Abstraction</strong> — Hiding implementation details</li>
+  </ul>
+
+  <h3>Example — Class and Object</h3>
+  <pre>class Student {
+
+    String name;
+    int age;
+
+    void display(){
+        System.out.println(name + " " + age);
+    }
+
+}
+
+public class Main {
+    public static void main(String[] args){
+
+        Student s1 = new Student();
+
+        s1.name = "Harini";
+        s1.age = 20;
+
+        s1.display();
+
+    }
+}</pre>
+
+  <button onclick="showPage('javaExplain')">Back</button>
+</div>
+
+<div id="javaSub3" class="section">
+  <h2>Java — JVM &amp; Tooling</h2>
+  <p><strong>JVM (Java Virtual Machine)</strong> is responsible for running Java programs.</p>
+
+  <h3>How a Java Program Runs</h3>
+  <ol style="text-align:left;width:60%;margin:auto;">
+    <li>Write Java code</li>
+    <li>Compile using Java Compiler (<code>javac</code>)</li>
+    <li>Convert to bytecode (.class file)</li>
+    <li>JVM executes the bytecode</li>
+  </ol>
+
+  <p>This allows Java to run on any operating system with a compatible JVM.</p>
+
+  <h3>Java Development Tools</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Tool</th><th>Purpose</th></tr>
+    <tr><td>JDK</td><td>Java Development Kit</td></tr>
+    <tr><td>JRE</td><td>Java Runtime Environment</td></tr>
+    <tr><td>JVM</td><td>Executes Java programs</td></tr>
+  </table>
+
+  <h3>Popular IDEs</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>IntelliJ IDEA</li>
+    <li>Eclipse IDE</li>
+    <li>NetBeans</li>
+    <li>Visual Studio Code</li>
+  </ul>
+
+  <button onclick="showPage('javaExplain')">Back</button>
+</div>
+
+<div id="javaSub4" class="section">
+  <h2>Java — Libraries &amp; Frameworks</h2>
+  <p>Java has many libraries and frameworks that make development faster and easier.</p>
+
+  <h3>Libraries</h3>
+  <p>Libraries are pre-written code that developers can use in their programs.</p>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Java Standard Library</li>
+    <li>Apache Commons</li>
+    <li>Google Guava</li>
+  </ul>
+
+  <h3>Frameworks</h3>
+  <p>Frameworks provide a structured environment for building applications.</p>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Spring Framework — used for web and enterprise applications</li>
+    <li>Hibernate — used for database operations</li>
+    <li>Apache Struts — used for web applications</li>
+  </ul>
+
+  <p>Frameworks help reduce development time and improve code organization.</p>
+
+  <button onclick="showPage('javaExplain')">Back</button>
+</div>
+
+<div id="javaSub5" class="section">
+  <h2>Java — Examples</h2>
+
+  <h3>Example 1 — Addition Program</h3>
+  <pre>public class AddNumbers {
+
+    public static void main(String[] args){
+
+        int a = 10;
+        int b = 20;
+
+        int sum = a + b;
+
+        System.out.println("Sum = " + sum);
+
+    }
+
+}</pre>
+  <p>Output</p>
+  <pre>Sum = 30</pre>
+
+  <h3>Example 2 — Even or Odd</h3>
+  <pre>public class EvenOdd {
+
+    public static void main(String[] args){
+
+        int num = 7;
+
+        if(num % 2 == 0){
+            System.out.println("Even");
+        }
+        else{
+            System.out.println("Odd");
+        }
+
+    }
+
+}</pre>
+
+  <h3>Example 3 — Loop Example</h3>
+  <pre>public class LoopExample {
+
+    public static void main(String[] args){
+
+        for(int i=1; i<=5; i++){
+            System.out.println(i);
+        }
+
+    }
+
+}</pre>
+  <p>Output</p>
+  <pre>1
+2
+3
+4
+5</pre>
+
+  <button onclick="showPage('javaExplain')">Back</button>
+</div>
+
+<div id="javaCode" class="section">
+<h2>Java Sample Code</h2>
+<pre>
+public class HelloJava {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+        int sum;
+
+        sum = a + b;
+
+        System.out.println("Value of a = " + a);
+        System.out.println("Value of b = " + b);
+        System.out.println("Sum = " + sum);
+    }
+}                                
+</pre>
+<h3>Output</h3>
+<pre>
+Value of a = 10
+Value of b = 20
+Sum = 30
+</pre>
+<p>Download Java coding app:</p>
+<a href="https://play.google.com/store/apps/details?id=com.sololearn" target="_blank">SoloLearn</a>
+<br><br>
+<div id="javaDragQuiz" class="drag-quiz"></div>
+<div class="drag-quiz controls" style="justify-content:center;gap:8px;margin-top:10px">
+  <button onclick="initDragQuiz('java')">Start Drag & Drop Quiz</button>
+  <button onclick="checkDragQuiz('java')">Check Answers</button>
+  <button onclick="showPage('javaCourse')">Back</button>
+</div>
+</div>
+
+<div id="javaQuiz" class="section">
+<h2>Java Quiz</h2>
+<input type="text" id="javaName" placeholder="Enter your name">
+
+<div class="quiz-box">
+
+<p>1. Who developed Java?</p>
+<label><input type="radio" name="jq1" value="a"> Dennis Ritchie</label>
+<label><input type="radio" name="jq1" value="b"> James Gosling</label>
+<label><input type="radio" name="jq1" value="c"> Bjarne Stroustrup</label>
+<label><input type="radio" name="jq1" value="d"> Guido van Rossum</label>
+
+<p>2. Java source file extension is?</p>
+<label><input type="radio" name="jq2" value="a"> .py</label>
+<label><input type="radio" name="jq2" value="b"> .c</label>
+<label><input type="radio" name="jq2" value="c"> .java</label>
+<label><input type="radio" name="jq2" value="d"> .html</label>
+
+<p>3. Java is which type of language?</p>
+<label><input type="radio" name="jq3" value="a"> Object Oriented</label>
+<label><input type="radio" name="jq3" value="b"> Machine Language</label>
+<label><input type="radio" name="jq3" value="c"> Assembly</label>
+<label><input type="radio" name="jq3" value="d"> None</label>
+
+<p>4. Java programs run on?</p>
+<label><input type="radio" name="jq4" value="a"> JVM</label>
+<label><input type="radio" name="jq4" value="b"> CPU</label>
+<label><input type="radio" name="jq4" value="c"> RAM</label>
+<label><input type="radio" name="jq4" value="d"> GPU</label>
+
+<p>5. Which keyword is used to create a class?</p>
+<label><input type="radio" name="jq5" value="a"> class</label>
+<label><input type="radio" name="jq5" value="b"> define</label>
+<label><input type="radio" name="jq5" value="c"> object</label>
+<label><input type="radio" name="jq5" value="d"> create</label>
+
+<p>6. Which method starts Java program?</p>
+<label><input type="radio" name="jq6" value="a"> start()</label>
+<label><input type="radio" name="jq6" value="b"> run()</label>
+<label><input type="radio" name="jq6" value="c"> main()</label>
+<label><input type="radio" name="jq6" value="d"> begin()</label>
+
+<p>7. Which symbol ends Java statement?</p>
+<label><input type="radio" name="jq7" value="a"> :</label>
+<label><input type="radio" name="jq7" value="b"> ;</label>
+<label><input type="radio" name="jq7" value="c"> .</label>
+<label><input type="radio" name="jq7" value="d"> ,</label>
+
+<p>8. Which is used to print output in Java?</p>
+<label><input type="radio" name="jq8" value="a"> print()</label>
+<label><input type="radio" name="jq8" value="b"> System.out.println()</label>
+<label><input type="radio" name="jq8" value="c"> echo()</label>
+<label><input type="radio" name="jq8" value="d"> display()</label>
+
+<p>9. Java is owned by?</p>
+<label><input type="radio" name="jq9" value="a"> Microsoft</label>
+<label><input type="radio" name="jq9" value="b"> Oracle</label>
+<label><input type="radio" name="jq9" value="c"> Apple</label>
+<label><input type="radio" name="jq9" value="d"> IBM</label>
+
+<p>10. Java is mainly used for?</p>
+<label><input type="radio" name="jq10" value="a"> Web Applications</label>
+<label><input type="radio" name="jq10" value="b"> Mobile Apps</label>
+<label><input type="radio" name="jq10" value="c"> Backend</label>
+<label><input type="radio" name="jq10" value="d"> All of the above</label>
+</div>
+<button onclick='checkQuiz("java","j",{q1:"b",q2:"c",q3:"a",q4:"a",q5:"a",q6:"c",q7:"b",q8:"b",q9:"b",q10:"d"})'>Submit Quiz</button>
+<br><br>
+<button onclick="showPage('javaCourse')">Back</button>
+</div>
+
+
+ 
+<!-- C COURSE -->
+<div id="cCourse" class="section">
+<h2>C Course</h2>
+<div class="box" onclick="showPage('cExplain')">Explanation</div>
+<div class="box" onclick="showPage('cVideo')">Video Tutorial</div>
+<div class="box" onclick="showPage('cCode')">Sample Code</div>
+<div class="box" onclick="showPage('cQuiz')">Quiz</div>
+<div class="box" onclick="openPuzzle('c')">Puzzle</div>
+<br><br>
+<button onclick="showPage('courses')">Back</button>
+</div>
+
+<div id="cExplain" class="section">
+<h2>C Explanation</h2>
+<div style="margin:12px 0;">
+  <button onclick="showPage('cSub1')">1. Overview</button>
+  <button onclick="showPage('cSub2')">2. Syntax & Basics</button>
+  <button onclick="showPage('cSub3')">3. Data Types & IO</button>
+  <button onclick="showPage('cSub4')">4. Control Flow</button>
+  <button onclick="showPage('cSub5')">5. Examples</button>
+</div>
+<p>C is a structured programming language widely used in systems programming and embedded applications.</p>
+<ul style="text-align:left;width:60%;margin:auto;">
+<li>C is a general-purpose programming language.</li>
+<li>C was developed by Dennis Ritchie.</li>
+<li>C was created in 1972.</li>
+<li>C is a procedural programming language.</li>
+<li>C programs are compiled using a compiler.</li>
+<li>The file extension of a C program is .c.</li>
+<li>printf() is used to display output.</li>
+<li>scanf() is used to take input from the user.</li>
+<li>C supports data types int, float, char, and double.</li>
+<li>C supports loops such as for, while, and do-while.</li>
+<li>C supports conditional statements like if and switch.</li>
+<li>Comments are written using `//` or `/**/`.</li>
+<li>C is the base language for many modern languages like C++ and Java.</li>
+</ul>
+<p>Popular companies using c: Intel,Cisco,Samsung Electronics.</p>
+<br><br>
+<button onclick="showPage('cCourse')">Back</button>
+</div>
+
+<div id="cVideo" class="section">
+<h2>C Programming Videos</h2>
+
+<a href="https://www.youtube.com/watch?v=KJgsSFOSQv0" target="_blank">1. C Programming Full Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=8PopR3x-VMY" target="_blank">2. C Programming Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=ZSPZob_1TOk" target="_blank">3. C Language Basics</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=irqbmMNs2Bo" target="_blank">4. C Programming for Beginners</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=PoJZQzJQFcs" target="_blank">5. C Programming Concepts</a><br><br>
+<br><br>
+<button onclick="showPage('cCourse')">Back</button>
+</div>
+
+<!-- C subtopics -->
+<div id="cSub1" class="section">
+  <h2>C — Overview</h2>
+  <p>C is a general-purpose programming language used for system programming and software development.</p>
+  <p>It was developed by Dennis Ritchie at Bell Labs in 1972.</p>
+
+  <p>C is considered the foundation of many modern programming languages like C++, Java, and Python.</p>
+
+  <h3>Features of C</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Simple and efficient</li>
+    <li>Structured programming language</li>
+    <li>Fast execution</li>
+    <li>Portable (runs on many platforms)</li>
+    <li>Close to hardware (used in system programming)</li>
+  </ul>
+
+  <h3>Uses of C</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Operating systems</li>
+    <li>Embedded systems</li>
+    <li>Compilers</li>
+    <li>System software</li>
+    <li>Device drivers</li>
+  </ul>
+
+  <button onclick="showPage('cExplain')">Back</button>
+</div>
+
+<div id="cSub2" class="section">
+  <h2>C — Syntax & Basics</h2>
+  <p>C programs follow a specific structure.</p>
+
+  <h3>Basic C Program</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main() {
+
+    printf("Hello World");
+
+    return 0;
+}
+</pre>
+
+  <h3>Explanation</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Part</th><th>Description</th></tr>
+    <tr><td>#include &lt;stdio.h&gt;</td><td>Includes the standard input/output library</td></tr>
+    <tr><td>main()</td><td>Entry point of the program</td></tr>
+    <tr><td>printf()</td><td>Prints output to the screen</td></tr>
+    <tr><td>return 0</td><td>Ends the program</td></tr>
+  </table>
+
+  <h3>Variables in C</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int age = 20;
+
+    printf("Age = %d", age);
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cExplain')">Back</button>
+</div>
+
+<div id="cSub3" class="section">
+  <h2>C — Data Types &amp; Input/Output</h2>
+  <h3>Data Types in C</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Data Type</th><th>Description</th><th>Example</th></tr>
+    <tr><td>int</td><td>Integer numbers</td><td>10</td></tr>
+    <tr><td>float</td><td>Decimal numbers</td><td>10.5</td></tr>
+    <tr><td>char</td><td>Single character</td><td>'A'</td></tr>
+    <tr><td>double</td><td>Large decimal number</td><td>20.123</td></tr>
+  </table>
+
+  <h3>Example</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int a = 10;
+    float b = 5.5;
+    char c = 'A';
+
+    printf("%d\n", a);
+    printf("%f\n", b);
+    printf("%c\n", c);
+
+    return 0;
+}
+</pre>
+
+  <h3>Input and Output</h3>
+  <p>C uses <code>scanf()</code> to take input from the user.</p>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int num;
+
+    printf("Enter a number: ");
+    scanf("%d", &amp;num);
+
+    printf("You entered %d", num);
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cExplain')">Back</button>
+</div>
+
+<div id="cSub4" class="section">
+  <h2>C — Control Flow</h2>
+  <p>Control flow statements determine the order of execution in a program.</p>
+
+  <h3>If Statement</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int age = 18;
+
+    if(age &gt;= 18){
+        printf("You can vote");
+    }
+
+    return 0;
+}
+</pre>
+
+  <h3>If–Else Statement</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int num = 5;
+
+    if(num % 2 == 0){
+        printf("Even");
+    }
+    else{
+        printf("Odd");
+    }
+
+    return 0;
+}
+</pre>
+
+  <h3>For Loop</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    for(int i=1; i&lt;=5; i++){
+        printf("%d\n", i);
+    }
+
+    return 0;
+}
+</pre>
+
+  <h3>While Loop</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int i = 1;
+
+    while(i &lt;= 5){
+        printf("%d\n", i);
+        i++;
+    }
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cExplain')">Back</button>
+</div>
+
+<div id="cSub5" class="section">
+  <h2>C — Examples</h2>
+
+  <h3>Example 1 — Addition Program</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int a = 10;
+    int b = 20;
+
+    int sum = a + b;
+
+    printf("Sum = %d", sum);
+
+    return 0;
+}
+</pre>
+  <p>Output</p>
+  <pre>Sum = 30</pre>
+
+  <h3>Example 2 — Even or Odd</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int num = 7;
+
+    if(num % 2 == 0)
+        printf("Even");
+    else
+        printf("Odd");
+
+    return 0;
+}
+</pre>
+
+  <h3>Example 3 — Multiplication Table</h3>
+  <pre>#include &lt;stdio.h&gt;
+
+int main(){
+
+    int num = 5;
+
+    for(int i=1; i&lt;=10; i++){
+        printf("%d x %d = %d\n", num, i, num*i);
+    }
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cExplain')">Back</button>
+</div>
+
+
+<div id="cCode" class="section">
+<h2>C Sample Code</h2>
+<pre>
+#include <stdio.h>
+
+int main() {
+    int a = 5;
+    int b = 10;
+    int sum;
+
+    sum = a + b;
+
+    printf("Value of a = %d\n", a);
+    printf("Value of b = %d\n", b);
+    printf("Sum = %d\n", sum);
+
+    return 0;
+} 
+</pre>
+<h3>Output</h3>
+<pre>
+Value of a = 5
+Value of b = 10
+Sum = 15
+</pre>
+<p>Download C coding app:</p>
+<a href="https://play.google.com/store/apps/details?id=com.sololearn" target="_blank">SoloLearn</a>
+<br><br>
+<div id="cDragQuiz" class="drag-quiz"></div>
+<div class="drag-quiz controls" style="justify-content:center;gap:8px;margin-top:10px">
+  <button onclick="initDragQuiz('c')">Start Drag & Drop Quiz</button>
+  <button onclick="checkDragQuiz('c')">Check Answers</button>
+  <button onclick="showPage('cCourse')">Back</button>
+</div>
+</div>
+
+<div id="cQuiz" class="section">
+<h2>C Quiz</h2>
+<input type="text" id="cName" placeholder="Enter your name">
+<div class="quiz-box">
+<p>1.Who developed the C programming language? </p>
+<label><input type="radio" name="cq1" value="a"> Dennis Ritchie </label> 
+<label><input type="radio" name="cq1" value="b"> James Gosling</label> 
+<label><input type="radio" name="cq1" value="c"> Bjarne Stroutrup</label>
+<label><input type="radio" name="cq1" value="d"> Guido van Rossum</label>
+
+<p> 2. C language was developed in which year?</p> 
+<label><input type="radio" name="cq2" value="a">1969</label> 
+<label><input type="radio" name="cq2" value="b">1972</label> 
+<label><input type="radio" name="cq2" value="c">1980</label> 
+<label><input type="radio" name="cq2" value="d">1991</label> 
+     
+<p> 3.   Which symbol is used to end a statement in C?</p> 
+<label><input type="radio" name="cq3" value="a">:</label>
+<label><input type="radio" name="cq3" value="b">;</label> 
+<label><input type="radio" name="cq3" value="c">.</label> 
+<label><input type="radio" name="cq3" value="d">,</label>
+    
+<p>4.  Which function is used to print output in C?</p>
+<label><input type="radio" name="cq4" value="a">print()</label> 
+<label><input type="radio" name="cq4" value="b">count()</label>
+<label><input type="radio" name="cq4" value="c">printf()</label>
+<label><input type="radio" name="cq4" value="d">display()</label> 
+
+<p>5. Which header file is used for input and output in C??</p> 
+<label><input type="radio" name="cq5" value="a">math.h</label> 
+<label><input type="radio" name="cq5" value="b">string.h</label> 
+<label><input type="radio" name="cq5" value="c">stdio.h</label>
+<label><input type="radio" name="cq5" value="d">conio.h</label>
+
+<p> 6. Which function is the starting point of a C program? </p> 
+<label><input type="radio" name="cq6" value="a">start()</label>
+<label><input type="radio" name="cq6" value="b">main()</label>
+<label><input type="radio" name="cq6" value="c">run()</label> 
+<label><input type="radio" name="cq6" value="d">begin()</label>
+
+<p> 7. Which data type is used to store integer values in C?</p> 
+<label><input type="radio" name="cq7" value="a">float</label> 
+<label><input type="radio" name="cq7" value="b">int</label>
+<label><input type="radio" name="cq7" value="c">char</label> 
+<label><input type="radio" name="cq7" value="d">double</label>
+
+<p>8. Which operator is used for addition in C?</p>
+<label><input type="radio" name="cq8" value="a">+</label> 
+<label><input type="radio" name="cq8" value="b">-</label> 
+<label><input type="radio" name="cq8" value="c">*</label> 
+<label><input type="radio" name="cq8" value="d">/</label>
+
+<p> 9. Which loop is used to repeat statements in C?</p> 
+<label><input type="radio" name="cq9" value="a">for</label> 
+<label><input type="radio" name="cq9" value="b">while</label> 
+<label><input type="radio" name="cq9" value="c">do-while</label>
+<label><input type="radio" name="cq9" value="d">All of the above</label>
+
+<p> 10. Which symbol is used for comments in C?</p> 
+<label><input type="radio" name="cq10" value="a">//</label> 
+<label><input type="radio" name="cq10" value="b">##</label>
+<label><input type="radio" name="cq10" value="c">%%</label> 
+<label><input type="radio" name="cq10" value="d">$$</label>
+</div>
+<button onclick='checkQuiz("c","c",{q1:"a",q2:"b",q3:"b",q4:"c",q5:"c",q6:"b",q7:"b",q8:"a",q9:"d",q10:"a"})'>Submit Quiz</button>
+<br><br>
+<button onclick="showPage('cCourse')">Back</button>
+</div>
+
+
+<!-- C++ COURSE -->
+<div id="cppCourse" class="section">
+<h2>C++ Course</h2>
+<div class="box" onclick="showPage('cppExplain')">Explanation</div>
+<div class="box" onclick="showPage('cppVideo')">Video Tutorial</div>
+<div class="box" onclick="showPage('cppCode')">Sample Code</div>
+<div class="box" onclick="showPage('cppQuiz')">Quiz</div>
+<div class="box" onclick="openPuzzle('cpp')">Puzzle</div>
+<button onclick="showPage('cppCourse')">Back</button>
+</div>
+
+<div id="cppExplain" class="section">
+<h2>C++ Explanation</h2>
+<div style="margin:12px 0;">
+  <button onclick="showPage('cppSub1')">1. Overview</button>
+  <button onclick="showPage('cppSub2')">2. Syntax & OOP</button>
+  <button onclick="showPage('cppSub3')">3. STL & Libraries</button>
+  <button onclick="showPage('cppSub4')">4. Memory & Pointers</button>
+  <button onclick="showPage('cppSub5')">5. Examples</button>
+</div>
+<p>C++ is an object-oriented extension of C, widely used in game development, apps, and system programming.</p>
+<ul style="text-align:left;width:60%;margin:auto;">
+<li>C++ is a programming language.</li>
+<li>C++ was developed by Bjarne Stroustrup.</li>
+<li>C++ was developed in 1985.</li>
+<li>C++ programs use the extension.cpp .</li>
+<li>C++ is an extension of the C language.</li>
+<li>C++ support object-oriented programming .</li>
+<li>C++ supports data types like int, float, char, and double.</li>
+<li> C++ supports classes and objects.</li>
+<li> C++ is faster and more powerful than many programming languages.</li>
+<li> C++ is used to develop system software and games.</li>
+<li>C++ supports loops like for, while, and do-while</li>
+<li>Statements in C++ end with a semicolon (;).</li>
+<li>C++ supports inheritance,polymorphism,encapsulation,functions.</li>
+</ul>
+<p>Popular companies using C++: Apple,Adobe,Tesla.</p>
+<br><br>
+<button onclick="showPage('cppCourse')">Back</button>
+</div>
+
+<div id="cppVideo" class="section">
+<h2>C++ Tutorial Videos</h2>
+
+<a href="https://www.youtube.com/watch?v=vLnPwxZdW4Y" target="_blank">1. C++ Full Course</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=mUQZ1qmKlLY" target="_blank">2. C++ Programming Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=8jLOx1hD3_o" target="_blank">3. C++ Beginner Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=Rub-JsjMhWY" target="_blank">4. C++ OOP Tutorial</a><br><br>
+
+<a href="https://www.youtube.com/watch?v=tvC1WCdV1XU" target="_blank">5. C++ Basics</a><br><br>
+<br><br>
+<button onclick="showPage('cppCourse')">Back</button>
+</div>
+
+<!-- C++ subtopics -->
+<div id="cppSub1" class="section">
+  <h2>C++ — Overview</h2>
+  <p>C++ is a general-purpose programming language used for system software, game development, and high-performance applications.</p>
+  <p>It was developed by Bjarne Stroustrup in 1985 as an extension of the C programming language.</p>
+
+  <p>C++ supports both procedural programming and object-oriented programming (OOP).</p>
+
+  <h3>Features of C++</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Fast and efficient</li>
+    <li>Object-Oriented Programming</li>
+    <li>Supports low-level memory manipulation</li>
+    <li>Portable across platforms</li>
+    <li>Large standard library</li>
+  </ul>
+
+  <h3>Uses of C++</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Game development</li>
+    <li>Operating systems</li>
+    <li>Embedded systems</li>
+    <li>Desktop applications</li>
+    <li>High-performance software</li>
+  </ul>
+
+  <button onclick="showPage('cppExplain')">Back</button>
+</div>
+
+<div id="cppSub2" class="section">
+  <h2>C++ — Syntax &amp; OOP</h2>
+  <h3>Basic C++ Program</h3>
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+
+    cout << "Hello World";
+
+    return 0;
+}
+</pre>
+
+  <h3>Explanation</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Part</th><th>Description</th></tr>
+    <tr><td>#include &lt;iostream&gt;</td><td>Includes input/output library</td></tr>
+    <tr><td>using namespace std</td><td>Allows use of standard library without std::</td></tr>
+    <tr><td>main()</td><td>Entry point of program</td></tr>
+    <tr><td>cout</td><td>Prints output</td></tr>
+  </table>
+
+  <h3>OOP Concepts</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Class — Blueprint for objects</li>
+    <li>Object — Instance of a class</li>
+    <li>Encapsulation — Data hiding</li>
+    <li>Inheritance — Reusing code from another class</li>
+    <li>Polymorphism — Same function with different behavior</li>
+    <li>Abstraction — Hiding implementation details</li>
+  </ul>
+
+  <h3>Example — Class and Object</h3>
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+class Student {
+
+public:
+    string name;
+    int age;
+
+    void display(){
+        cout << name << " " << age;
+    }
+
+};
+
+int main(){
+
+    Student s1;
+
+    s1.name = "Harini";
+    s1.age = 20;
+
+    s1.display();
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cppExplain')">Back</button>
+</div>
+
+<div id="cppSub3" class="section">
+  <h2>C++ — STL &amp; Libraries</h2>
+  <p>The STL (Standard Template Library) is a powerful C++ library that provides ready-made data structures and algorithms.</p>
+
+  <h3>Components of STL</h3>
+  <ul style="text-align:left;width:60%;margin:auto;">
+    <li>Containers — vector, list, map</li>
+    <li>Algorithms — sort, search</li>
+    <li>Iterators — traverse containers</li>
+  </ul>
+
+  <h3>Example — Vector</h3>
+  <pre>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main(){
+
+    vector<int> numbers = {1,2,3,4,5};
+
+    for(int n : numbers){
+        cout << n << " ";
+    }
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cppExplain')">Back</button>
+</div>
+
+<div id="cppSub4" class="section">
+  <h2>C++ — Memory &amp; Pointers</h2>
+  <p>C++ allows direct memory management using pointers.</p>
+
+  <h3>Pointer Concept</h3>
+  <p>A pointer is a variable that stores the memory address of another variable.</p>
+
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main(){
+
+    int a = 10;
+
+    int *ptr = &a;
+
+    cout << a << endl;
+    cout << ptr << endl;
+
+    return 0;
+}
+</pre>
+
+  <h3>Explanation</h3>
+  <table style="margin:auto;text-align:left;">
+    <tr><th>Symbol</th><th>Meaning</th></tr>
+    <tr><td>&amp;</td><td>Address of variable</td></tr>
+    <tr><td>*</td><td>Pointer variable</td></tr>
+  </table>
+
+  <h3>Dynamic Memory Allocation</h3>
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main(){
+
+    int *num = new int;
+
+    *num = 50;
+
+    cout << *num;
+
+    delete num;
+
+    return 0;
+}
+</pre>
+
+  <button onclick="showPage('cppExplain')">Back</button>
+</div>
+
+<div id="cppSub5" class="section">
+  <h2>C++ — Examples</h2>
+
+  <h3>Example 1 — Addition Program</h3>
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main(){
+
+    int a = 10;
+    int b = 20;
+
+    int sum = a + b;
+
+    cout << "Sum = " << sum;
+
+    return 0;
+}
+</pre>
+  <p>Output</p>
+  <pre>Sum = 30</pre>
+
+  <h3>Example 2 — Even or Odd</h3>
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main(){
+
+    int num = 7;
+
+    if(num % 2 == 0)
+        cout << "Even";
+    else
+        cout << "Odd";
+
+    return 0;
+}
+</pre>
+
+  <h3>Example 3 — Loop Example</h3>
+  <pre>#include &lt;iostream&gt;
+using namespace std;
+
+int main(){
+
+    for(int i=1; i<=5; i++){
+        cout << i << endl;
+    }
+
+    return 0;
+}
+</pre>
+
+  <p>Output</p>
+  <pre>1
+2
+3
+4
+5</pre>
+
+  <button onclick="showPage('cppExplain')">Back</button>
+</div>
+
+<div id="cppCode" class="section">
+<h2>C++ Sample Code</h2>
+<pre>
+#include <iostream>
+using namespace std;
+
+int main() {
+    int a = 8;
+    int b = 12;
+    int sum;
+
+    sum = a + b;
+
+    cout << "Value of a = " << a << endl;
+    cout << "Value of b = " << b << endl;
+    cout << "Sum = " << sum << endl;
+
+    return 0;
+}
+</pre>
+<h3>Output</h3>
+<pre>
+Value of a = 8
+Value of b = 12
+Sum = 20
+</pre>
+<p>Download C++ coding app:</p>
+<a href="https://play.google.com/store/apps/details?id=com.sololearn" target="_blank">Sololearn</a>
+<br><br>
+<div id="cppDragQuiz" class="drag-quiz"></div>
+<div class="drag-quiz controls" style="justify-content:center;gap:8px;margin-top:10px">
+  <button onclick="initDragQuiz('cpp')">Start Drag & Drop Quiz</button>
+  <button onclick="checkDragQuiz('cpp')">Check Answers</button>
+  <button onclick="showPage('cppCourse')">Back</button>
+</div>
+</div>
+
+<div id="cppQuiz" class="section">
+<h2>C++ Quiz</h2>
+<input type="text" id="cppName" placeholder="Enter your name">
+<div class="quiz-box">
+<p>1. Who developed C++? </p>
+<label><input type="radio" name="cppq1" value="a"> ennis Ritchie </label> 
+<label><input type="radio" name="cppq1" value="b"> Bjarne Stroustrup</label> 
+<label><input type="radio" name="cppq1" value="c"> James Gosling</label>
+<label><input type="radio" name="cppq1" value="d"> Guido van Rossum</label>
+
+<p> 2. C++ is an extension of which language?</p> 
+<label><input type="radio" name="cppq2" value="a">Java</label> 
+<label><input type="radio" name="cppq2" value="b">C</label> 
+<label><input type="radio" name="cppq2" value="c">Python</label> 
+<label><input type="radio" name="cppq2" value="d">Pascal</label> 
+     
+<p> 3.  Which symbol is used to end a statement in C++?</p> 
+<label><input type="radio" name="cppq3" value="a">:</label>
+<label><input type="radio" name="cppq3" value="b">;</label> 
+<label><input type="radio" name="cppq3" value="c">.</label> 
+<label><input type="radio" name="cppq3" value="d">,</label>
+    
+<p>4. Which function is the starting point of a C++ program?</p>
+<label><input type="radio" name="cppq4" value="a">start()</label> 
+<label><input type="radio" name="cppq4" value="b">main()</label>
+<label><input type="radio" name="cppq4" value="c">run()</label>
+<label><input type="radio" name="cppq4" value="d">begin()</label> 
+
+<p>5. Which header file is used for input and output in C++?</p> 
+<label><input type="radio" name="cppq5" value="a">stdio.h</label> 
+<label><input type="radio" name="cppq5" value="b">iostream.h</label> 
+<label><input type="radio" name="cppq5" value="c">string.h</label>
+<label><input type="radio" name="cppq5" value="d">math.h</label>
+
+<p> 6. Which operator is used for addition in C++? </p> 
+<label><input type="radio" name="cppq6" value="a">+</label>
+<label><input type="radio" name="cppq6" value="b">-</label>
+<label><input type="radio" name="cppq6" value="c">*</label> 
+<label><input type="radio" name="cppq6" value="d">/</label>
+
+<p> 7. Which keyword is used to define a class in C++?</p> 
+<label><input type="radio" name="cppq7" value="a">object</label> 
+<label><input type="radio" name="cppq7" value="b">define</label>
+<label><input type="radio" name="cppq7" value="c">class</label> 
+<label><input type="radio" name="cppq7" value="d">struct</label>
+
+<p>8.  Which operator is used to access members of a class object?</p>
+<label><input type="radio" name="cppq8" value="a">.</label> 
+<label><input type="radio" name="cppq8" value="b">:</label> 
+<label><input type="radio" name="cppq8" value="c">;</label> 
+<label><input type="radio" name="cppq8" value="d">,</label>
+
+<p> 9.  Which of the following is a loop in C++?</p> 
+<label><input type="radio" name="cppq9" value="a">for</label> 
+<label><input type="radio" name="cppq9" value="b">while</label> 
+<label><input type="radio" name="cppq9" value="c">do-while</label>
+<label><input type="radio" name="cppq9" value="d">All of the above</label>
+
+<p> 10. Which symbol is used for single-line comments in C++?</p> 
+<label><input type="radio" name="cppq10" value="a">//</label> 
+<label><input type="radio" name="cppq10" value="b">##</label>
+<label><input type="radio" name="cppq10" value="c">%%</label> 
+<label><input type="radio" name="cppq10" value="d">$$</label>
+</div>
+<button onclick='checkQuiz("cpp","cpp",{q1:"b",q2:"c",q3:"b",q4:"b",q5:"b",q6:"a",q7:"c",q8:"a",q9:"d",q10:"a"})'>Submit Quiz</button>
+<br><br>
+<button onclick="showPage('courses')">Back</button>
+</div>
+
+<!-- Global icon navigation (appears on pages except entry/register/login) -->
+<div id="globalNav" style="display:none;position:fixed;right:12px;top:80px;flex-direction:column;gap:8px;z-index:999">
+  <button class="icon-btn" title="Back to Login" onclick="showPage('login')">🔑</button>
+  <button class="icon-btn" title="Course List" onclick="showPage('courses')">📚</button>
+  <button class="icon-btn" title="Python Course" onclick="showPage('pythonCourse')">🐍</button>
+  <button class="icon-btn" title="Frontend Course" onclick="showPage('frontendCourse')">🖥️</button>
+  <button class="icon-btn" title="Backend Course" onclick="showPage('backendCourse')">🗄️</button>
+  <button class="icon-btn" title="Java Course" onclick="showPage('javaCourse')">☕</button>
+  <button class="icon-btn" title="C Course" onclick="showPage('cCourse')">🔣</button>
+  <button class="icon-btn" title="C++ Course" onclick="showPage('cppCourse')">➕➕</button>
+</div>
